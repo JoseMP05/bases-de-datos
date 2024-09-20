@@ -1,0 +1,101 @@
+CREATE TABLE BIBLIOTECA(
+    codigo INT(4) PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    email VARCHAR(50) NOT NULL, 
+    tipo VARCHAR(10) NOT NULL CHECK(tipo = 'FISICA' OR tipo = 'DIGITAL')
+);
+
+CREATE TABLE FISICA(
+    codigo INT(4) PRIMARY KEY REFERENCES biblioteca,
+    direccion varchar(20) NOT NULL, 
+    telefono INT(10) NOT NULL
+);
+
+CREATE TABLE DIGITAL(
+    codigo INT(4) PRIMARY KEY REFERENCES biblioteca,
+    pagina_web VARCHAR(20) NOT NULL,
+    filial INT(4) REFERENCES fisica
+);
+
+INSERT INTO biblioteca(codigo, nombre, email, tipo)
+VALUES (10, "Tomas Carrasquilla", "bibliotecatomascarrasquilla@gmail.com", "FISICA");
+
+INSERT INTO biblioteca(codigo, nombre, email, tipo)
+VALUES (20, "Tomas Carrasquilla", "bibliotecatomascarrasquilla@gmail.com", "DIGITAL");
+
+INSERT INTO biblioteca(codigo, nombre, email, tipo)
+VALUES (30, "La Floresta", "bibliotecalafloresta@gmail.com", "FISICA");
+
+INSERT INTO biblioteca(codigo, nombre, email, tipo)
+VALUES (40, "Miguel de Cervantes", "bibliotecamigueldecervantes@gmail.com", "DIGITAL");
+
+INSERT INTO fisica (codigo, direccion, telefono)
+VALUES (10,"Avenida 80 #No. 82-60, Medellín, Antioquia", 3157846525);
+
+INSERT INTO digital (codigo, pagina_web, filial)
+VALUES (20, "bibliotecatomascarrasquilla.com.co", 10);
+
+
+create table LECTOR(
+    cod_biblioteca int(4) references BIBLIOTECA,
+    cedula int(10),
+    nombre varchar(20) not null,
+    email varchar(25) not null,
+    telefono int(10) not null,
+    primary key(cedula,codbiblioteca)
+);
+
+create table ESTANTERIA(
+    cod_biblioteca int(4) references FISICA,
+    numero int(2),
+    genero varchar(10) not null check(genero in ('comedia', 'tragedia', 'ciencia ficcion', 'romance', 'aventura'))
+);
+
+create table AUTOR(
+    cedula int(10) primary key,
+    nombre varchar(20) not null
+);
+
+create table LIBRO(
+    codigo int(3) primary key,
+    titulo varchar(25) not null,
+    editorial varchar(15) not null,
+    genero varchar(10) not null check(genero in ('comedia', 'tragedia', 'ciencia ficcion', 'romance', 'aventura')),
+    fecha_publicacion date not null
+);
+
+create table AUTORIA(
+    ced_autor int(10) references AUTOR,
+    cod_libro int(3) references LIBRO,
+    porcentaje_aporte int(3) not null,
+    primary key(ced_autor, cod_libro)
+);
+
+create table RECURSO_DIGITAL(
+    cod_biblioteca int(4) not null references DIGITAL,
+    cod_libro int(3) references LIBRO,
+    url varchar(100) primary key,
+    tamaño int(4) not null,
+    capacidad int(4) not null
+);
+
+create table FORMATO_FISICO(
+    num_estanteria int(2) references ESTANTERIA,
+    cod_biblioteca int(4) references ESTANTERIA,
+    cod_libro int(3) references LIBRO,
+    num_serial int(10),
+    numero_paginas int(4) not null,
+    stock int(2) not null,
+    primary key(num_serial,cod_libro)
+);
+
+create table PRESTAMO(
+    ced_lector int(10) not null references LECTOR,
+    url_digital varchar(100) references RECURSO_DIGITAL,
+    serial_fisico int(10) references FORMATO_FISICO,
+    cod_libro int(3) references FORMATO_FISICO,
+    codigo int(5) primary key,
+    fecha_inicio date not null,
+    fecha_entrega date not null check(fecha_entrega >= fecha_inicio),
+    numero_renovaciones int(2) not null
+);
