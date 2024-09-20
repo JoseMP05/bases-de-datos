@@ -16,8 +16,8 @@ Cada integrante que acceda al proyecto debe tener su base de datos de MySQL actu
 - **Materia:** Bases de Datos I
 - **Profesor:** Francisco Javier Moreno Arboleda
 - **Institución:** Universidad Nacional de Colombia sede Medellín
-- **Semestre:** 2023-1
+- **Semestre:** 2024-1
 - **Integrantes:** 
   - Estiven Ospina Jaramillo 
   - Jhon Jader Cordoba Magaña
-  - José  Miguel Pulgarín Agudelo
+  - José Miguel Pulgarín Agudelo
