@@ -89,7 +89,7 @@ CREATE TABLE LECTOR(
 );
 
 -- Biblioteca Tomas Carrasquilla (código 10)
-INSERT INTO lector (cod_biblioteca, cedula, nombre, telefono, email, puntuacion)
+INSERT INTO LECTOR (cod_biblioteca, cedula, nombre, telefono, email, puntuacion)
 VALUES 
 (10, 1234567890, 'Juan Pérez', '3001234567', 'juanperez@gmail.com', 85),
 (10, 1234567891, 'María García', '3002345678', 'mariagarcia@gmail.com', 90),
@@ -98,7 +98,7 @@ VALUES
 (10, 1234567894, 'Carlos Ramírez', '3005678901', 'carlosramirez@gmail.com', 95);
 
 -- Biblioteca Tomas Carrasquilla (Digital) (código 20)
-INSERT INTO lector (cod_biblioteca, cedula, nombre, telefono, email, puntuacion)
+INSERT INTO LECTOR (cod_biblioteca, cedula, nombre, telefono, email, puntuacion)
 VALUES 
 (20, 2234567890, 'Laura Gómez', '3011234567', 'lauragomez@gmail.com', 92),
 (20, 2234567891, 'Jorge López', '3012345678', 'jorgelopez@gmail.com', 50),
@@ -107,7 +107,7 @@ VALUES
 (20, 2234567894, 'Lucía Sánchez', '3015678901', 'luciasanchez@gmail.com', 87);
 
 -- Biblioteca La Floresta (código 30)
-INSERT INTO lector (cod_biblioteca, cedula, nombre, telefono, email, puntuacion)
+INSERT INTO LECTOR (cod_biblioteca, cedula, nombre, telefono, email, puntuacion)
 VALUES 
 (30, 3234567890, 'Pedro González', '3021234567', 'pedrogonzalez@gmail.com', 77),
 (30, 3234567891, 'Natalia Morales', '3022345678', 'nataliamorales@gmail.com', 83),
@@ -116,7 +116,7 @@ VALUES
 (30, 3234567894, 'Andrés Beltrán', '3025678901', 'andresbeltran@gmail.com', 85);
 
 -- Biblioteca Miguel de Cervantes (Digital) (código 40)
-INSERT INTO lector (cod_biblioteca, cedula, nombre, telefono, email, puntuacion)
+INSERT INTO LECTOR (cod_biblioteca, cedula, nombre, telefono, email, puntuacion)
 VALUES 
 (40, 4234567890, 'Sofía Hernández', '3031234567', 'sofiahernandez@gmail.com', 91),
 (40, 4234567891, 'Felipe Cortés', '3032345678', 'felipecortes@gmail.com', 86),
@@ -125,7 +125,7 @@ VALUES
 (40, 4234567894, 'Carmen Fernández', '3035678901', 'carmenfernandez@gmail.com', 93);
 
 -- Biblioteca Altavista (código 50)
-INSERT INTO lector (cod_biblioteca, cedula, nombre, telefono, email, puntuacion)
+INSERT INTO LECTOR (cod_biblioteca, cedula, nombre, telefono, email, puntuacion)
 VALUES 
 (50, 5234567890, 'Mateo Serrano', '3041234567', 'mateoserrano@gmail.com', 82),
 (50, 5234567891, 'Isabella Ruiz', '3042345678', 'isabellaruiz@gmail.com', 87),
@@ -134,7 +134,7 @@ VALUES
 (50, 5234567894, 'Emilia Suárez', '3045678901', 'emiliasuarez@gmail.com', 85);
 
 -- Biblioteca Gabriel García Márquez (código 60)
-INSERT INTO lector (cod_biblioteca, cedula, nombre, telefono, email, puntuacion)
+INSERT INTO LECTOR (cod_biblioteca, cedula, nombre, telefono, email, puntuacion)
 VALUES 
 (60, 6234567890, 'Paula Vargas', '3051234567', 'paulavargas@gmail.com', 88),
 (60, 6234567891, 'Diego Paredes', '3052345678', 'diegoparedes@gmail.com', 91),
@@ -143,7 +143,7 @@ VALUES
 (60, 6234567894, 'Renata Jiménez', '3055678901', 'renatajimenez@gmail.com', 92);
 
 -- Biblioteca Gabriel García Márquez (Digital) (código 70)
-INSERT INTO lector (cod_biblioteca, cedula, nombre, telefono, email, puntuacion)
+INSERT INTO LECTOR (cod_biblioteca, cedula, nombre, telefono, email, puntuacion)
 VALUES 
 (70, 7234567890, 'Martín Salazar', '3061234567', 'martinsalazar@gmail.com', 80),
 (70, 7234567891, 'Andrea Villalobos', '3062345678', 'andreavillalobos@gmail.com', 85),
@@ -152,7 +152,7 @@ VALUES
 (70, 7234567894, 'Claudia Mendoza', '3065678901', 'claudiamendoza@gmail.com', 22);
 
 -- Biblioteca Nacional Virtual (código 80)
-INSERT INTO lector (cod_biblioteca, cedula, nombre, telefono, email, puntuacion)
+INSERT INTO LECTOR (cod_biblioteca, cedula, nombre, telefono, email, puntuacion)
 VALUES 
 (80, 8234567890, 'Francisco Meza', '3071234567', 'franciscomeza@gmail.com', 93),
 (80, 8234567891, 'Adriana Rojas', '3072345678', 'adrianarojas@gmail.com', 74),
@@ -168,7 +168,7 @@ CREATE TABLE ESTANTERIA(
 );
 
 -- Inserciones para la Biblioteca Tomas Carrasquilla (código 10)
-INSERT INTO estanteria (cod_biblioteca, numero, genero)
+INSERT INTO ESTANTERIA (cod_biblioteca, numero, genero)
 VALUES 
 (10, 1, 'comedia'),
 (10, 2, 'aventura'),
@@ -179,7 +179,7 @@ VALUES
 (10, 8, 'ciencia ficcion');
 
 -- Inserciones para la Biblioteca La Floresta (código 30)
-INSERT INTO estanteria (cod_biblioteca, numero, genero)
+INSERT INTO ESTANTERIA (cod_biblioteca, numero, genero)
 VALUES 
 (30, 1, 'romance'),
 (30, 2, 'tragedia'),
@@ -191,7 +191,7 @@ VALUES
 (30, 8, 'aventura');
 
 -- Inserciones para la Biblioteca Altavista (código 50)
-INSERT INTO estanteria (cod_biblioteca, numero, genero)
+INSERT INTO ESTANTERIA (cod_biblioteca, numero, genero)
 VALUES 
 (50, 1, 'terror'),
 (50, 2, 'ciencia ficcion'),
@@ -203,7 +203,7 @@ VALUES
 (50, 8, 'ciencia ficcion');
 
 -- Inserciones para la Biblioteca Gabriel García Márquez (código 60)
-INSERT INTO estanteria (cod_biblioteca, numero, genero)
+INSERT INTO ESTANTERIA (cod_biblioteca, numero, genero)
 VALUES 
 (60, 1, 'tragedia'),
 (60, 2, 'aventura'),
@@ -584,8 +584,29 @@ CREATE TABLE ALQUILER(
     codigo INT(5) PRIMARY KEY,
     fecha_inicio DATE NOT NULL,
     fecha_entrega DATE NOT NULL CHECK(fecha_entrega >= fecha_inicio),
-    numero_renovaciones INT(2) NOT NULL
+    numero_renovaciones INT(2) NOT NULL,
+    precio INT(6) NOT NULL
 );
+
+-- Inserciones de alquileres de recursos digitales
+INSERT INTO ALQUILER(ced_lector,url_digital,cod_libro,codigo,
+                    fecha_inicio,fecha_entrega,numero_renovacion,precio) VALUES
+                    (1234567890, 'https://bibliotecatomascarrasquilla.com.co/libros/27',27,1,'2024-09-21','2024-10-06',0,10000),
+                    (1234567891, 'https://bibliotecatomascarrasquilla.com.co/libros/21',21,2,'2023-08-01','2023-08-16',2,18000),
+                    (1234567890, 'https://bibliotecatomascarrasquilla.com.co/libros/61',61,5,'2017-06-25','2017-07-10',1,15000),
+                    (1234567892, 'https://bibliotecatomascarrasquilla.com.co/libros/63',63,3,'2021-02-10','2021-02-25',0,5000),
+                    (1234567894, 'https://bibliotecatomascarrasquilla.com.co/libros/23',23,6,'2011-03-10','2011-03-25',0,25000),
+                    (1234567894, 'https://bibliotecatomascarrasquilla.com.co/libros/60',60,4,'2015-05-12','2015-05-27',0,12000);
+
+-- Inserciones de alquileres de formatos fisicos
+INSERT INTO ALQUILER(ced_lector,serial_fisico,cod_libro,codigo,
+                    fecha_inicio,fecha_entrega,numero_renovacion,precio) VALUES
+                    (1234567893, 10000087,87,7,'2022-09-21','2022-10-06',1,11000),
+                    (1234567891, 10000086,86,9,'2024-07-03','2024-07-18',3,20000),
+                    (1234567893, 10000083,83,10,'2014-06-25','2014-07-10',1,13000),
+                    (1234567892, 10000084,84,8,'2022-02-11','2022-02-26',0,4500),
+                    (1234567894, 10000086,86,11,'2020-01-10','2020-01-25',2,21000),
+                    (1234567894, 10000088,88,12,'2019-04-12','2019-04-27',0,9000);
 
 /*En otras palabras, cuenta los libros que no tienen ni un recurso digital ni un formato físico asociado.*/
 select COUNT(*) 
