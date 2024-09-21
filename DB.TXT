@@ -584,29 +584,28 @@ CREATE TABLE ALQUILER(
     codigo INT(5) PRIMARY KEY,
     fecha_inicio DATE NOT NULL,
     fecha_entrega DATE NOT NULL CHECK(fecha_entrega >= fecha_inicio),
-    numero_renovaciones INT(2) NOT NULL,
     precio INT(6) NOT NULL
 );
 
 -- Inserciones de alquileres de recursos digitales
 INSERT INTO ALQUILER(ced_lector,url_digital,cod_libro,codigo,
-                    fecha_inicio,fecha_entrega,numero_renovacion,precio) VALUES
-                    (1234567890, 'https://bibliotecatomascarrasquilla.com.co/libros/27',27,1,'2024-09-21','2024-10-06',0,10000),
-                    (1234567891, 'https://bibliotecatomascarrasquilla.com.co/libros/21',21,2,'2023-08-01','2023-08-16',2,18000),
-                    (1234567890, 'https://bibliotecatomascarrasquilla.com.co/libros/61',61,5,'2017-06-25','2017-07-10',1,15000),
-                    (1234567892, 'https://bibliotecatomascarrasquilla.com.co/libros/63',63,3,'2021-02-10','2021-02-25',0,5000),
-                    (1234567894, 'https://bibliotecatomascarrasquilla.com.co/libros/23',23,6,'2011-03-10','2011-03-25',0,25000),
-                    (1234567894, 'https://bibliotecatomascarrasquilla.com.co/libros/60',60,4,'2015-05-12','2015-05-27',0,12000);
+                    fecha_inicio,fecha_entrega,precio) VALUES
+                    (1234567890, 'https://bibliotecatomascarrasquilla.com.co/libros/27',27,1,'2024-09-21','2024-10-06',10000),
+                    (1234567891, 'https://bibliotecatomascarrasquilla.com.co/libros/21',21,2,'2023-08-01','2023-08-16',18000),
+                    (1234567890, 'https://bibliotecatomascarrasquilla.com.co/libros/61',61,5,'2017-06-25','2017-07-10',15000),
+                    (1234567892, 'https://bibliotecatomascarrasquilla.com.co/libros/63',63,3,'2021-02-10','2021-02-25',5000),
+                    (1234567894, 'https://bibliotecatomascarrasquilla.com.co/libros/23',23,6,'2011-03-10','2011-03-25',25000),
+                    (1234567894, 'https://bibliotecatomascarrasquilla.com.co/libros/60',60,4,'2015-05-12','2015-05-27',12000);
 
 -- Inserciones de alquileres de formatos fisicos
 INSERT INTO ALQUILER(ced_lector,serial_fisico,cod_libro,codigo,
-                    fecha_inicio,fecha_entrega,numero_renovacion,precio) VALUES
-                    (1234567893, 10000087,87,7,'2022-09-21','2022-10-06',1,11000),
-                    (1234567891, 10000086,86,9,'2024-07-03','2024-07-18',3,20000),
-                    (1234567893, 10000083,83,10,'2014-06-25','2014-07-10',1,13000),
-                    (1234567892, 10000084,84,8,'2022-02-11','2022-02-26',0,4500),
-                    (1234567894, 10000086,86,11,'2020-01-10','2020-01-25',2,21000),
-                    (1234567894, 10000088,88,12,'2019-04-12','2019-04-27',0,9000);
+                    fecha_inicio,fecha_entrega,precio) VALUES
+                    (1234567893, 10000087,87,7,'2022-09-21','2022-10-06',11000),
+                    (1234567891, 10000086,86,9,'2024-07-03','2024-07-18',20000),
+                    (1234567893, 10000083,83,10,'2014-06-25','2014-07-10',13000),
+                    (1234567892, 10000084,84,8,'2022-02-11','2022-02-26',4500),
+                    (1234567894, 10000086,86,11,'2020-01-10','2020-01-25',21000),
+                    (1234567894, 10000088,88,12,'2019-04-12','2019-04-27',9000);
 
 /*En otras palabras, cuenta los libros que no tienen ni un recurso digital ni un formato físico asociado.*/
 select COUNT(*) 
