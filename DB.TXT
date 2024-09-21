@@ -1,3 +1,14 @@
+DROP TABLE BIBLIOTECA;
+DROP TABLE FISICA;
+DROP TABLE DIGITAL;
+DROP TABLE LECTOR;
+DROP TABLE ESTANTERIA;
+DROP TABLE LIBRO;
+DROP TABLE AUTOR;
+DROP TABLE AUTORIA;
+DROP TABLE RECURSO_DIGITAL;
+DROP TABLE FORMATO_FISICO;
+
 CREATE TABLE BIBLIOTECA(
     codigo INT(4) PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
@@ -6,15 +17,15 @@ CREATE TABLE BIBLIOTECA(
 );
 
 CREATE TABLE FISICA(
-    codigo INT(4) PRIMARY KEY REFERENCES biblioteca,
-    direccion varchar(20) NOT NULL, 
-    telefono INT(10) NOT NULL
+    cod_biblioteca INT(4) PRIMARY KEY REFERENCES biblioteca,
+    direccion VARCHAR(100) NOT NULL, 
+    telefono VARCHAR(10) NOT NULL
 );
 
 CREATE TABLE DIGITAL(
-    codigo INT(4) PRIMARY KEY REFERENCES biblioteca,
-    pagina_web VARCHAR(20) NOT NULL,
-    filial INT(4) REFERENCES fisica
+    cod_biblioteca INT(4) PRIMARY KEY REFERENCES biblioteca,
+    pagina_web VARCHAR(100) NOT NULL,
+    filial INT(4) UNIQUE REFERENCES fisica
 );
 
 INSERT INTO biblioteca(codigo, nombre, email, tipo)
@@ -23,79 +34,567 @@ VALUES (10, "Tomas Carrasquilla", "bibliotecatomascarrasquilla@gmail.com", "FISI
 INSERT INTO biblioteca(codigo, nombre, email, tipo)
 VALUES (20, "Tomas Carrasquilla", "bibliotecatomascarrasquilla@gmail.com", "DIGITAL");
 
+INSERT INTO fisica (cod_biblioteca, direccion, telefono)
+VALUES (10,"Avenida 80 #No. 82-60", "3157846525");
+
+INSERT INTO digital (cod_biblioteca, pagina_web, filial)
+VALUES (20, "bibliotecatomascarrasquilla.com.co", 10);
+
+
 INSERT INTO biblioteca(codigo, nombre, email, tipo)
 VALUES (30, "La Floresta", "bibliotecalafloresta@gmail.com", "FISICA");
+
+INSERT INTO fisica (cod_biblioteca, direccion, telefono)
+VALUES (30,"Carrera 86 # 46 - 55 ", "557 0388");
+
 
 INSERT INTO biblioteca(codigo, nombre, email, tipo)
 VALUES (40, "Miguel de Cervantes", "bibliotecamigueldecervantes@gmail.com", "DIGITAL");
 
-INSERT INTO fisica (codigo, direccion, telefono)
-VALUES (10,"Avenida 80 #No. 82-60, Medellín, Antioquia", 3157846525);
-
-INSERT INTO digital (codigo, pagina_web, filial)
-VALUES (20, "bibliotecatomascarrasquilla.com.co", 10);
+INSERT INTO digital (cod_biblioteca, pagina_web)
+VALUES (40, "bibliotecamigueldecervantes.com.co");
 
 
-create table LECTOR(
-    cod_biblioteca int(4) references BIBLIOTECA,
-    cedula int(10),
-    nombre varchar(20) not null,
-    email varchar(25) not null,
-    telefono int(10) not null,
-    primary key(cedula,codbiblioteca)
+INSERT INTO biblioteca(codigo, nombre, email, tipo)
+VALUES (50, "Altavista", "bibliotecaaltavista@gmail.com", "FISICA");
+
+INSERT INTO fisica (cod_biblioteca, direccion, telefono)
+VALUES (50,"Calle 18 # 103 - 160", "5570483");
+
+INSERT INTO biblioteca(codigo, nombre, email, tipo)
+VALUES (60, "Gabriel García Márquez", "bibliotecagabrielgarciamarquez@gmail.com", "FISICA");
+
+INSERT INTO biblioteca(codigo, nombre, email, tipo)
+VALUES (70, "Gabriel García Márquez", "bibliotecagabrielgarciamarquez@gmail.com", "DIGITAL");
+
+INSERT INTO fisica (cod_biblioteca, direccion, telefono)
+VALUES (60,"Carrera 80 # 104 - 04", "5571216");
+
+INSERT INTO digital (cod_biblioteca, pagina_web, filial)
+VALUES (70, "bibliotecagabrielgarciamarquez.com.co", 70);
+
+INSERT INTO biblioteca(codigo, nombre, email, tipo)
+VALUES (80, "Biblioteca Nacional Virtual", "Bibliotecanacionalvirtual@gmail.com", "DIGITAL");
+
+INSERT INTO digital (cod_biblioteca, pagina_web)
+VALUES (80, "bibliotecanacional.gov.co");
+
+CREATE TABLE LECTOR(
+    cod_biblioteca INT(4) NOT NULL REFERENCES BIBLIOTECA,
+    cedula BIGINT(10) PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    telefono VARCHAR(10) NOT NULL,
+    email VARCHAR(50) NOT NULL,
+    puntuacion INT(3) NOT NULL CHECK(puntuacion >= 0 AND puntuacion <= 100)
 );
 
-create table ESTANTERIA(
-    cod_biblioteca int(4) references FISICA,
-    numero int(2),
-    genero varchar(10) not null check(genero in ('comedia', 'tragedia', 'ciencia ficcion', 'romance', 'aventura'))
+-- Biblioteca Tomas Carrasquilla (código 10)
+INSERT INTO lector (cod_biblioteca, cedula, nombre, telefono, email, puntuacion)
+VALUES 
+(10, 1234567890, 'Juan Pérez', '3001234567', 'juanperez@gmail.com', 85),
+(10, 1234567891, 'María García', '3002345678', 'mariagarcia@gmail.com', 90),
+(10, 1234567892, 'Luis Martínez', '3003456789', 'luismartinez@gmail.com', 75),
+(10, 1234567893, 'Ana Torres', '3004567890', 'anatorres@gmail.com', 88),
+(10, 1234567894, 'Carlos Ramírez', '3005678901', 'carlosramirez@gmail.com', 95);
+
+-- Biblioteca Tomas Carrasquilla (Digital) (código 20)
+INSERT INTO lector (cod_biblioteca, cedula, nombre, telefono, email, puntuacion)
+VALUES 
+(20, 2234567890, 'Laura Gómez', '3011234567', 'lauragomez@gmail.com', 92),
+(20, 2234567891, 'Jorge López', '3012345678', 'jorgelopez@gmail.com', 50),
+(20, 2234567892, 'Carolina Rivera', '3013456789', 'carolinarivera@gmail.com', 78),
+(20, 2234567893, 'Miguel Díaz', '3014567890', 'migueldiaz@gmail.com', 80),
+(20, 2234567894, 'Lucía Sánchez', '3015678901', 'luciasanchez@gmail.com', 87);
+
+-- Biblioteca La Floresta (código 30)
+INSERT INTO lector (cod_biblioteca, cedula, nombre, telefono, email, puntuacion)
+VALUES 
+(30, 3234567890, 'Pedro González', '3021234567', 'pedrogonzalez@gmail.com', 77),
+(30, 3234567891, 'Natalia Morales', '3022345678', 'nataliamorales@gmail.com', 83),
+(30, 3234567892, 'Ricardo Vega', '3023456789', 'ricardovega@gmail.com', 90),
+(30, 3234567893, 'Verónica Lara', '3024567890', 'veronicalara@gmail.com', 92),
+(30, 3234567894, 'Andrés Beltrán', '3025678901', 'andresbeltran@gmail.com', 85);
+
+-- Biblioteca Miguel de Cervantes (Digital) (código 40)
+INSERT INTO lector (cod_biblioteca, cedula, nombre, telefono, email, puntuacion)
+VALUES 
+(40, 4234567890, 'Sofía Hernández', '3031234567', 'sofiahernandez@gmail.com', 91),
+(40, 4234567891, 'Felipe Cortés', '3032345678', 'felipecortes@gmail.com', 86),
+(40, 4234567892, 'Valeria Ortiz', '3033456789', 'valeriaortiz@gmail.com', 37),
+(40, 4234567893, 'Daniel Ríos', '3034567890', 'danielrios@gmail.com', 79),
+(40, 4234567894, 'Carmen Fernández', '3035678901', 'carmenfernandez@gmail.com', 93);
+
+-- Biblioteca Altavista (código 50)
+INSERT INTO lector (cod_biblioteca, cedula, nombre, telefono, email, puntuacion)
+VALUES 
+(50, 5234567890, 'Mateo Serrano', '3041234567', 'mateoserrano@gmail.com', 82),
+(50, 5234567891, 'Isabella Ruiz', '3042345678', 'isabellaruiz@gmail.com', 87),
+(50, 5234567892, 'Sebastián Pérez', '3043456789', 'sebastianperez@gmail.com', 84),
+(50, 5234567893, 'Santiago Morales', '3044567890', 'santiagomorales@gmail.com', 79),
+(50, 5234567894, 'Emilia Suárez', '3045678901', 'emiliasuarez@gmail.com', 85);
+
+-- Biblioteca Gabriel García Márquez (código 60)
+INSERT INTO lector (cod_biblioteca, cedula, nombre, telefono, email, puntuacion)
+VALUES 
+(60, 6234567890, 'Paula Vargas', '3051234567', 'paulavargas@gmail.com', 88),
+(60, 6234567891, 'Diego Paredes', '3052345678', 'diegoparedes@gmail.com', 91),
+(60, 6234567892, 'Victoria León', '3053456789', 'victorialeon@gmail.com', 77),
+(60, 6234567893, 'Alejandro Moreno', '3054567890', 'alejandromoreno@gmail.com', 89),
+(60, 6234567894, 'Renata Jiménez', '3055678901', 'renatajimenez@gmail.com', 92);
+
+-- Biblioteca Gabriel García Márquez (Digital) (código 70)
+INSERT INTO lector (cod_biblioteca, cedula, nombre, telefono, email, puntuacion)
+VALUES 
+(70, 7234567890, 'Martín Salazar', '3061234567', 'martinsalazar@gmail.com', 80),
+(70, 7234567891, 'Andrea Villalobos', '3062345678', 'andreavillalobos@gmail.com', 85),
+(70, 7234567892, 'Fernando Guzmán', '3063456789', 'fernandoguzman@gmail.com', 88),
+(70, 7234567893, 'Sara Estrada', '3064567890', 'saraestrada@gmail.com', 90),
+(70, 7234567894, 'Claudia Mendoza', '3065678901', 'claudiamendoza@gmail.com', 22);
+
+-- Biblioteca Nacional Virtual (código 80)
+INSERT INTO lector (cod_biblioteca, cedula, nombre, telefono, email, puntuacion)
+VALUES 
+(80, 8234567890, 'Francisco Meza', '3071234567', 'franciscomeza@gmail.com', 93),
+(80, 8234567891, 'Adriana Rojas', '3072345678', 'adrianarojas@gmail.com', 74),
+(80, 8234567892, 'José Camargo', '3073456789', 'josecamargo@gmail.com', 81),
+(80, 8234567893, 'Elena Acosta', '3074567890', 'elenaacosta@gmail.com', 89),
+(80, 8234567894, 'Gabriela Ramírez', '3075678901', 'gabrielaramirez@gmail.com', 90);
+
+CREATE TABLE ESTANTERIA(
+    cod_biblioteca INT(4) NOT NULL REFERENCES FISICA,
+    numero INT(3),
+    genero VARCHAR(20) NOT NULL CHECK(genero in ('comedia', 'tragedia', 'ciencia ficcion', 'romance', 'aventura', 'terror')),
+    PRIMARY KEY(cod_biblioteca, numero)
 );
 
-create table AUTOR(
-    cedula int(10) primary key,
-    nombre varchar(20) not null
+-- Inserciones para la Biblioteca Tomas Carrasquilla (código 10)
+INSERT INTO estanteria (cod_biblioteca, numero, genero)
+VALUES 
+(10, 1, 'comedia'),
+(10, 2, 'aventura'),
+(10, 3, 'terror'),
+(10, 4, 'ciencia ficcion'),
+(10, 5, 'aventura'),
+(10, 6, 'aventura'),
+(10, 8, 'ciencia ficcion');
+
+-- Inserciones para la Biblioteca La Floresta (código 30)
+INSERT INTO estanteria (cod_biblioteca, numero, genero)
+VALUES 
+(30, 1, 'romance'),
+(30, 2, 'tragedia'),
+(30, 3, 'aventura'),
+(30, 4, 'comedia'),
+(30, 5, 'terror'),
+(30, 6, 'ciencia ficcion'),
+(30, 7, 'romance'),
+(30, 8, 'aventura');
+
+-- Inserciones para la Biblioteca Altavista (código 50)
+INSERT INTO estanteria (cod_biblioteca, numero, genero)
+VALUES 
+(50, 1, 'terror'),
+(50, 2, 'ciencia ficcion'),
+(50, 3, 'comedia'),
+(50, 4, 'romance'),
+(50, 5, 'aventura'),
+(50, 6, 'romance'),
+(50, 7, 'terror'),
+(50, 8, 'ciencia ficcion');
+
+-- Inserciones para la Biblioteca Gabriel García Márquez (código 60)
+INSERT INTO estanteria (cod_biblioteca, numero, genero)
+VALUES 
+(60, 1, 'tragedia'),
+(60, 2, 'aventura'),
+(60, 3, 'ciencia ficcion'),
+(60, 4, 'terror'),
+(60, 5, 'romance'),
+(60, 6, 'comedia'),
+(60, 7, 'aventura'),
+(60, 8, 'ciencia ficcion'),
+(60, 9, 'terror'),
+(60, 10, 'romance');
+
+
+CREATE TABLE AUTOR(
+    cedula VARCHAR(10) PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL
 );
 
-create table LIBRO(
-    codigo int(3) primary key,
-    titulo varchar(25) not null,
-    editorial varchar(15) not null,
-    genero varchar(10) not null check(genero in ('comedia', 'tragedia', 'ciencia ficcion', 'romance', 'aventura')),
-    fecha_publicacion date not null
+INSERT INTO AUTOR (cedula, nombre) VALUES
+('1000000001', 'Gabriel García Márquez'),
+('1000000002', 'Isabel Allende'),
+('1000000003', 'Mario Vargas Llosa'),
+('1000000004', 'Julio Cortázar'),
+('1000000005', 'Jorge Luis Borges'),
+('1000000006', 'Carlos Fuentes'),
+('1000000007', 'Pablo Neruda'),
+('1000000008', 'Octavio Paz'),
+('1000000009', 'Laura Esquivel'),
+('1000000010', 'Roberto Bolaño'),
+('1000000011', 'Juan Rulfo'),
+('1000000012', 'Gabriela Mistral'),
+('1000000013', 'José Martí'),
+('1000000014', 'Miguel de Cervantes'),
+('1000000015', 'Federico García Lorca'),
+('1000000016', 'Lope de Vega'),
+('1000000017', 'Javier Marías'),
+('1000000018', 'Arturo Pérez-Reverte'),
+('1000000019', 'Camilo José Cela'),
+('1000000020', 'Ana María Matute'),
+('1000000021', 'Antonio Machado'),
+('1000000022', 'Rafael Alberti'),
+('1000000023', 'Miguel Delibes'),
+('1000000024', 'Gustavo Adolfo Bécquer'),
+('1000000025', 'Vicente Aleixandre');
+
+CREATE TABLE LIBRO(
+    codigo INT(4) PRIMARY KEY,
+    titulo VARCHAR(100) NOT NULL,
+    editorial VARCHAR(50) NOT NULL,
+    genero VARCHAR(20) NOT NULL CHECK(genero in ('comedia', 'tragedia', 'ciencia ficcion', 'romance', 'aventura', 'terror')),
+    fecha_publicacion DATE NOT NULL
 );
 
-create table AUTORIA(
-    ced_autor int(10) references AUTOR,
-    cod_libro int(3) references LIBRO,
-    porcentaje_aporte int(3) not null,
-    primary key(ced_autor, cod_libro)
+INSERT INTO LIBRO (codigo, titulo, editorial, genero, fecha_publicacion) VALUES
+(1, 'Cien Años de Soledad', 'Sudamericana', 'comedia', '1967-05-30'),
+(2, 'La Casa de los Espíritus', 'Plaza & Janés', 'tragedia', '1982-10-01'),
+(3, 'La Ciudad y los Perros', 'Seix Barral', 'ciencia ficcion', '1963-10-01'),
+(4, 'Rayuela', 'Sudamericana', 'romance', '1963-06-28'),
+(5, 'Ficciones', 'Sur', 'aventura', '1944-01-01'),
+(6, 'La Muerte de Artemio Cruz', 'Fondo de Cultura Económica', 'terror', '1962-01-01'),
+(7, 'Veinte Poemas de Amor y una Canción Desesperada', 'Nascimiento', 'romance', '1924-01-01'),
+(8, 'El Laberinto de la Soledad', 'Fondo de Cultura Económica', 'ciencia ficcion', '1950-01-01'),
+(9, 'Como Agua para Chocolate', 'Plaza & Janés', 'romance', '1989-01-01'),
+(10, 'Los Detectives Salvajes', 'Anagrama', 'aventura', '1998-01-01'),
+(11, 'Pedro Páramo', 'Fondo de Cultura Económica', 'terror', '1955-01-01'),
+(12, 'Desolación', 'Nascimiento', 'tragedia', '1922-01-01'),
+(13, 'Versos Sencillos', 'Imprenta La Moderna', 'comedia', '1891-01-01'),
+(14, 'Don Quijote de la Mancha', 'Francisco de Robles', 'aventura', '1605-01-16'),
+(15, 'Bodas de Sangre', 'El Arbol', 'tragedia', '1933-01-01'),
+(16, 'Fuenteovejuna', 'Francisco de Robles', 'comedia', '1619-01-01'),
+(17, 'Corazón tan Blanco', 'Anagrama', 'romance', '1992-01-01'),
+(18, 'El Club Dumas', 'Alfaguara', 'aventura', '1993-01-01'),
+(19, 'La Colmena', 'Destino', 'comedia', '1951-01-01'),
+(20, 'Olvidado Rey Gudú', 'Destino', 'aventura', '1996-01-01'),
+(21, 'Campos de Castilla', 'Renacimiento', 'tragedia', '1912-01-01'),
+(22, 'Marinero en Tierra', 'Biblioteca Nueva', 'romance', '1925-01-01'),
+(23, 'Los Santos Inocentes', 'Destino', 'tragedia', '1981-01-01'),
+(24, 'Rimas y Leyendas', 'Cátedra', 'romance', '1871-01-01'),
+(25, 'La Despedida', 'Espasa Calpe', 'tragedia', '1937-01-01'),
+(26, 'El Aleph', 'Losada', 'ciencia ficcion', '1949-01-01'),
+(27, 'El Amor en los Tiempos del Cólera', 'Oveja Negra', 'romance', '1985-01-01'),
+(28, 'El Túnel', 'Losada', 'tragedia', '1948-01-01'),
+(29, 'El Coronel no Tiene Quien le Escriba', 'Harper & Row', 'comedia', '1961-01-01'),
+(30, 'La Tregua', 'Arca', 'romance', '1960-01-01'),
+(31, 'Sobre Héroes y Tumbas', 'Sudamericana', 'aventura', '1961-01-01'),
+(32, 'El Reino de Este Mundo', 'Gallimard', 'ciencia ficcion', '1949-01-01'),
+(33, 'La Fiesta del Chivo', 'Alfaguara', 'tragedia', '2000-01-01'),
+(34, 'El Beso de la Mujer Araña', 'Seix Barral', 'romance', '1976-01-01'),
+(35, 'El Señor Presidente', 'Losada', 'tragedia', '1946-01-01'),
+(36, 'El Siglo de las Luces', 'Gallimard', 'aventura', '1962-01-01'),
+(37, 'La Región Más Transparente', 'Fondo de Cultura Económica', 'ciencia ficcion', '1958-01-01'),
+(38, 'El Otoño del Patriarca', 'Plaza & Janés', 'tragedia', '1975-01-01'),
+(39, 'La Sombra del Viento', 'Planeta', 'aventura', '2001-01-01'),
+(40, 'El Amor, las Mujeres y la Muerte', 'Alianza', 'romance', '1851-01-01'),
+(41, 'El Llano en Llamas', 'Fondo de Cultura Económica', 'aventura', '1953-01-01'),
+(42, 'La Hojarasca', 'Losada', 'tragedia', '1955-01-01'),
+(43, 'El General en su Laberinto', 'Oveja Negra', 'aventura', '1989-01-01'),
+(44, 'La Ciudad y los Perros', 'Seix Barral', 'ciencia ficcion', '1963-01-01'),
+(45, 'Pantaleón y las Visitadoras', 'Seix Barral', 'comedia', '1973-01-01'),
+(46, 'La Guerra del Fin del Mundo', 'Tusquets', 'aventura', '1981-01-01'),
+(47, 'Conversación en la Catedral', 'Seix Barral', 'tragedia', '1969-01-01'),
+(48, 'Crónica de una Muerte Anunciada', 'Plaza & Janés', 'tragedia', '1981-01-01'),
+(49, 'El Héroe Discreto', 'Alfaguara', 'aventura', '2013-01-01'),
+(50, 'La Casa Verde', 'Seix Barral', 'aventura', '1966-01-01'),
+(51, 'El Paraíso en la Otra Esquina', 'Alfaguara', 'romance', '2003-01-01'),
+(52, 'Travesuras de la Niña Mala', 'Alfaguara', 'romance', '2006-01-01'),
+(53, 'El Sueño del Celta', 'Alfaguara', 'aventura', '2010-01-01'),
+(54, 'Cinco Esquinas', 'Alfaguara', 'tragedia', '2016-01-01'),
+(55, 'El Hombre que Amaba a los Perros', 'Tusquets', 'tragedia', '2009-01-01'),
+(56, 'La Novela de Perón', 'Planeta', 'aventura', '1985-01-01'),
+(57, 'Santa Evita', 'Planeta', 'tragedia', '1995-01-01'),
+(58, 'El Secreto de sus Ojos', 'Alfaguara', 'romance', '2005-01-01'),
+(59, 'El Jardín de al Lado', 'Alfaguara', 'romance', '1981-01-01'),
+(60, 'El Pasado', 'Anagrama', 'romance', '2003-01-01'),
+(61, 'El Entenado', 'Alfaguara', 'aventura', '1983-01-01'),
+(62, 'El Vuelo del Tigre', 'Alfaguara', 'aventura', '1981-01-01'),
+(63, 'El País de las Mujeres', 'Alfaguara', 'comedia', '2010-01-01'),
+(64, 'El Asco', 'Tusquets', 'tragedia', '1997-01-01'),
+(65, 'El Insomnio de Bolívar', 'Alfaguara', 'aventura', '2009-01-01'),
+(66, 'El Desbarrancadero', 'Alfaguara', 'tragedia', '2001-01-01'),
+(67, 'El Olvido que Seremos', 'Alfaguara', 'tragedia', '2006-01-01'),
+(68, 'El Ruido de las Cosas al Caer', 'Alfaguara', 'tragedia', '2011-01-01'),
+(69, 'El Desierto de los Tártaros', 'Alfaguara', 'aventura', '1940-01-01'),
+(70, 'El Nombre de la Rosa', 'Bompiani', 'aventura', '1980-01-01'),
+(71, 'El Amor en los Tiempos del Cólera', 'Oveja Negra', 'romance', '1985-01-01'),
+(72, 'El General en su Laberinto', 'Oveja Negra', 'aventura', '1989-01-01'),
+(73, 'El Otoño del Patriarca', 'Plaza & Janés', 'tragedia', '1975-01-01'),
+(74, 'El Coronel no Tiene Quien le Escriba', 'Harper & Row', 'comedia', '1961-01-01'),
+(75, 'La Mala Hora', 'Sudamericana', 'tragedia', '1962-01-01'),
+(76, 'El Amor y Otros Demonios', 'Sudamericana', 'romance', '1994-01-01'),
+(77, 'Memoria de mis Putas Tristes', 'Random House', 'romance', '2004-01-01'),
+(78, 'Noticia de un Secuestro', 'Random House', 'aventura', '1996-01-01'),
+(79, 'Vivir para Contarla', 'Random House', 'aventura', '2002-01-01'),
+(80, 'Doce Cuentos Peregrinos', 'Sudamericana', 'aventura', '1992-01-01'),
+(81, 'El Rastro de tu Padre', 'Alfaguara', 'tragedia', '2018-01-01'),
+(82, 'El Tiempo de las Moscas', 'Alfaguara', 'aventura', '2020-01-01'),
+(83, 'El Año del Verano que Nunca Llegó', 'Alfaguara', 'aventura', '2015-01-01'),
+(84, 'El Hombre que Amaba a los Perros', 'Tusquets', 'tragedia', '2009-01-01'),
+(85, 'El Sueño del Celta', 'Alfaguara', 'aventura', '2010-01-01'),
+(86, 'El Héroe Discreto', 'Alfaguara', 'aventura', '2013-01-01'),
+(87, 'El Paraíso en la Otra Esquina', 'Alfaguara', 'romance', '2003-01-01'),
+(88, 'Travesuras de la Niña Mala', 'Alfaguara', 'romance', '2006-01-01'),
+(89, 'Cinco Esquinas', 'Alfaguara', 'tragedia', '2016-01-01'),
+(90, 'El Hombre que Amaba a los Perros', 'Tusquets', 'tragedia', '2009-01-01'),
+(91, 'La Novela de Perón', 'Planeta', 'aventura', '1985-01-01'),
+(92, 'Santa Evita', 'Planeta', 'tragedia', '1995-01-01'),
+(93, 'El Secreto de sus Ojos', 'Alfaguara', 'romance', '2005-01-01'),
+(94, 'El Jardín de al Lado', 'Alfaguara', 'romance', '1981-01-01'),
+(95, 'El Pasado', 'Anagrama', 'romance', '2003-01-01'),
+(96, 'El Entenado', 'Alfaguara', 'aventura', '1983-01-01'),
+(97, 'El Vuelo del Tigre', 'Alfaguara', 'aventura', '1981-01-01'),
+(98, 'El País de las Mujeres', 'Alfaguara', 'comedia', '2010-01-01'),
+(99, 'El Asco', 'Tusquets', 'tragedia', '1997-01-01'),
+(100, 'El Insomnio de Bolívar', 'Alfaguara', 'aventura', '2009-01-01');
+
+CREATE TABLE AUTORIA(
+    ced_autor VARCHAR(10) NOT NULL REFERENCES AUTOR,
+    cod_libro INT(4) NOT NULL REFERENCES LIBRO,
+    porcentaje_aporte INT(3) NOT NULL,
+    PRIMARY KEY(ced_autor, cod_libro)
 );
 
-create table RECURSO_DIGITAL(
-    cod_biblioteca int(4) not null references DIGITAL,
-    cod_libro int(3) references LIBRO,
-    url varchar(100) primary key,
-    tamaño int(4) not null,
-    capacidad int(4) not null
+INSERT INTO AUTORIA (ced_autor, cod_libro, porcentaje_aporte) VALUES
+('1000000001', 1, 60),
+('1000000002', 1, 40),
+('1000000003', 2, 100),
+('1000000004', 3, 50),
+('1000000005', 3, 50),
+('1000000006', 4, 100),
+('1000000007', 5, 100),
+('1000000008', 6, 100),
+('1000000009', 7, 100),
+('1000000010', 8, 100),
+('1000000011', 9, 100),
+('1000000012', 10, 100),
+('1000000013', 11, 100),
+('1000000014', 12, 100),
+('1000000015', 13, 100),
+('1000000016', 14, 100),
+('1000000017', 15, 100),
+('1000000018', 16, 100),
+('1000000019', 17, 100),
+('1000000020', 18, 100),
+('1000000021', 19, 100),
+('1000000022', 20, 100),
+('1000000023', 21, 100),
+('1000000024', 22, 100),
+('1000000025', 23, 100),
+('1000000001', 24, 50),
+('1000000002', 24, 50),
+('1000000003', 25, 100),
+('1000000004', 26, 100),
+('1000000005', 27, 100),
+('1000000006', 28, 100),
+('1000000007', 29, 100),
+('1000000008', 30, 100),
+('1000000009', 31, 100),
+('1000000010', 32, 100),
+('1000000011', 33, 100),
+('1000000012', 34, 100),
+('1000000013', 35, 100),
+('1000000014', 36, 100),
+('1000000015', 37, 100),
+('1000000016', 38, 100),
+('1000000017', 39, 100),
+('1000000018', 40, 100),
+('1000000019', 41, 100),
+('1000000020', 42, 100),
+('1000000021', 43, 100),
+('1000000022', 44, 100),
+('1000000023', 45, 100),
+('1000000024', 46, 100),
+('1000000025', 47, 100),
+('1000000001', 48, 50),
+('1000000002', 48, 50),
+('1000000003', 49, 100),
+('1000000004', 50, 100);
+
+CREATE TABLE RECURSO_DIGITAL(
+    cod_biblioteca INT(4) NOT NULL REFERENCES DIGITAL,
+    cod_libro INT(4) NOT NULL REFERENCES LIBRO,
+    url VARCHAR(100) PRIMARY KEY,
+    tamaño INT(4) NOT NULL, /*Tamaño en MB*/
+    capacidad INT(4) NOT NULL /*Capacidad maxima de visitas simultaneas*/
 );
 
-create table FORMATO_FISICO(
-    num_estanteria int(2) references ESTANTERIA,
-    cod_biblioteca int(4) references ESTANTERIA,
-    cod_libro int(3) references LIBRO,
-    num_serial int(10),
-    numero_paginas int(4) not null,
-    stock int(2) not null,
-    primary key(num_serial,cod_libro)
+CREATE TABLE FORMATO_FISICO(
+    num_estanteria INT(3) REFERENCES ESTANTERIA,
+    /*cod_biblioteca INT(4) REFERENCES ESTANTERIA,*/
+    cod_libro INT(4) NOT NULL REFERENCES LIBRO,
+    num_serial INT(8),
+    numero_paginas INT(4) NOT NULL,
+    stock INT(3) NOT NULL,
+    PRIMARY KEY(num_serial,cod_libro)
 );
 
-create table PRESTAMO(
-    ced_lector int(10) not null references LECTOR,
-    url_digital varchar(100) references RECURSO_DIGITAL,
-    serial_fisico int(10) references FORMATO_FISICO,
-    cod_libro int(3) references FORMATO_FISICO,
-    codigo int(5) primary key,
-    fecha_inicio date not null,
-    fecha_entrega date not null check(fecha_entrega >= fecha_inicio),
-    numero_renovaciones int(2) not null
+-- Inserciones para RECURSO_DIGITAL
+INSERT INTO RECURSO_DIGITAL (cod_biblioteca, cod_libro, url, tamaño, capacidad) VALUES
+(20, 1, 'https://bibliotecatomascarrasquilla.com.co/libros/1', 5, 100),
+(20, 2, 'https://bibliotecatomascarrasquilla.com.co/libros/2', 4, 80),
+(20, 3, 'https://bibliotecatomascarrasquilla.com.co/libros/3', 6, 120),
+(40, 4, 'https://bibliotecamigueldecervantes.com.co/libros/4', 3, 90),
+(40, 5, 'https://bibliotecamigueldecervantes.com.co/libros/5', 5, 110),
+(40, 6, 'https://bibliotecamigueldecervantes.com.co/libros/6', 4, 100),
+(70, 7, 'https://bibliotecagabrielgarciamarquez.com.co/libros/7', 2, 70),
+(70, 8, 'https://bibliotecagabrielgarciamarquez.com.co/libros/8', 3, 80),
+(70, 9, 'https://bibliotecagabrielgarciamarquez.com.co/libros/9', 4, 90),
+(80, 10, 'https://bibliotecanacional.gov.co/libros/10', 5, 150),
+(80, 11, 'https://bibliotecanacional.gov.co/libros/11', 4, 140),
+(80, 12, 'https://bibliotecanacional.gov.co/libros/12', 3, 130),
+(20, 13, 'https://bibliotecatomascarrasquilla.com.co/libros/13', 2, 75),
+(40, 14, 'https://bibliotecamigueldecervantes.com.co/libros/14', 6, 200),
+(70, 15, 'https://bibliotecagabrielgarciamarquez.com.co/libros/15', 3, 85),
+(20, 33, 'https://bibliotecatomascarrasquilla.com.co/libros/33', 4, 100),
+(20, 34, 'https://bibliotecatomascarrasquilla.com.co/libros/34', 3, 90),
+(20, 35, 'https://bibliotecatomascarrasquilla.com.co/libros/35', 5, 110),
+(40, 36, 'https://bibliotecamigueldecervantes.com.co/libros/36', 4, 95),
+(40, 37, 'https://bibliotecamigueldecervantes.com.co/libros/37', 3, 85),
+(40, 38, 'https://bibliotecamigueldecervantes.com.co/libros/38', 5, 105),
+(70, 39, 'https://bibliotecagabrielgarciamarquez.com.co/libros/39', 4, 100),
+(70, 40, 'https://bibliotecagabrielgarciamarquez.com.co/libros/40', 3, 90),
+(70, 41, 'https://bibliotecagabrielgarciamarquez.com.co/libros/41', 5, 110),
+(80, 42, 'https://bibliotecanacional.gov.co/libros/42', 4, 100),
+(80, 43, 'https://bibliotecanacional.gov.co/libros/43', 3, 90),
+(80, 44, 'https://bibliotecanacional.gov.co/libros/44', 5, 110);
+
+-- Inserciones para FORMATO_FISICO
+INSERT INTO FORMATO_FISICO (num_estanteria, cod_libro, num_serial, numero_paginas, stock) VALUES
+(1, 1, 10000001, 432, 5),
+(2, 2, 10000002, 368, 3),
+(3, 3, 10000003, 256, 4),
+(4, 4, 10000004, 576, 2),
+(5, 5, 10000005, 224, 6),
+(6, 6, 10000006, 320, 4),
+(1, 7, 10000007, 64, 8),
+(2, 8, 10000008, 192, 3),
+(3, 9, 10000009, 256, 5),
+(4, 10, 10000010, 688, 2),
+(5, 11, 10000011, 128, 7),
+(6, 12, 10000012, 96, 4),
+(1, 13, 10000013, 80, 6),
+(2, 14, 10000014, 863, 3),
+(3, 15, 10000015, 112, 5),
+(4, 16, 10000016, 160, 4),
+(5, 17, 10000017, 304, 3),
+(6, 18, 10000018, 496, 2),
+(1, 19, 10000019, 336, 5),
+(2, 20, 10000020, 944, 1),
+(1, 45, 10000045, 280, 3),
+(2, 46, 10000046, 320, 4),
+(3, 47, 10000047, 350, 2),
+(4, 48, 10000048, 200, 5),
+(5, 49, 10000049, 240, 3),
+(6, 50, 10000050, 300, 4),
+(1, 51, 10000051, 260, 3),
+(2, 52, 10000052, 290, 4),
+(3, 53, 10000053, 310, 2),
+(4, 54, 10000054, 180, 5),
+(5, 55, 10000055, 220, 3),
+(6, 56, 10000056, 270, 4);
+
+-- Libros solo en formato digital
+INSERT INTO RECURSO_DIGITAL (cod_biblioteca, cod_libro, url, tamaño, capacidad) VALUES
+(80, 21, 'https://bibliotecanacional.gov.co/libros/21', 3, 100),
+(80, 22, 'https://bibliotecanacional.gov.co/libros/22', 2, 80),
+(80, 60, 'https://bibliotecanacional.gov.co/libros/60', 4, 100),
+(20, 61, 'https://bibliotecatomascarrasquilla.com.co/libros/61', 3, 90),
+(40, 62, 'https://bibliotecamigueldecervantes.com.co/libros/62', 5, 110),
+(70, 63, 'https://bibliotecagabrielgarciamarquez.com.co/libros/63', 4, 100),
+(80, 23, 'https://bibliotecanacional.gov.co/libros/23', 4, 120);
+
+-- Libros solo en formato físico
+INSERT INTO FORMATO_FISICO (num_estanteria, cod_libro, num_serial, numero_paginas, stock) VALUES
+(3, 24, 10000024, 208, 4),
+(4, 25, 10000025, 176, 3),
+(5, 26, 10000026, 192, 5),
+(NULL, 83, 10000083, 270, 4),
+(NULL, 84, 10000084, 310, 3),
+(NULL, 85, 10000085, 250, 5),
+(NULL, 86, 10000086, 280, 4),
+(NULL, 87, 10000087, 300, 3),
+(NULL, 88, 10000088, 320, 2);
+
+-- Libros en ambos formatos
+INSERT INTO RECURSO_DIGITAL (cod_biblioteca, cod_libro, url, tamaño, capacidad) VALUES
+(20, 27, 'https://bibliotecatomascarrasquilla.com.co/libros/27', 5, 150),
+(40, 28, 'https://bibliotecamigueldecervantes.com.co/libros/28', 3, 100),
+(70, 29, 'https://bibliotecagabrielgarciamarquez.com.co/libros/29', 4, 120),
+(20, 57, 'https://bibliotecatomascarrasquilla.com.co/libros/57', 4, 100),
+(40, 58, 'https://bibliotecamigueldecervantes.com.co/libros/58', 3, 90),
+(70, 59, 'https://bibliotecagabrielgarciamarquez.com.co/libros/59', 5, 110),
+(80, 64, 'https://bibliotecanacional.gov.co/libros/64', 3, 90),
+(20, 65, 'https://bibliotecatomascarrasquilla.com.co/libros/65', 5, 110),
+(40, 66, 'https://bibliotecamigueldecervantes.com.co/libros/66', 4, 100),
+(70, 67, 'https://bibliotecagabrielgarciamarquez.com.co/libros/67', 3, 90),
+(80, 68, 'https://bibliotecanacional.gov.co/libros/68', 5, 110);
+
+-- Libros sin estantería asignada
+INSERT INTO FORMATO_FISICO (num_estanteria, cod_libro, num_serial, numero_paginas, stock) VALUES
+(6, 27, 10000027, 368, 3),
+(1, 28, 10000028, 160, 4),
+(2, 29, 10000029, 96, 5),
+(NULL, 30, 10000030, 240, 2),
+(NULL, 31, 10000031, 512, 1),
+(NULL, 32, 10000032, 144, 3),
+(1, 69, 10000069, 230, 3),
+(2, 70, 10000070, 270, 4),
+(3, 71, 10000071, 310, 2),
+(4, 72, 10000072, 190, 5),
+(5, 73, 10000073, 220, 3),
+(6, 74, 10000074, 250, 4),
+(1, 75, 10000075, 280, 3),
+(2, 76, 10000076, 300, 4),
+(3, 77, 10000077, 320, 2),
+(4, 78, 10000078, 210, 5),
+(5, 79, 10000079, 240, 3),
+(6, 80, 10000080, 260, 4),
+(NULL, 81, 10000081, 290, 3),
+(NULL, 82, 10000082, 330, 2),
+(NULL, 89, 10000089, 230, 4),
+(NULL, 90, 10000090, 260, 3),
+(NULL, 91, 10000091, 290, 5),
+(NULL, 92, 10000092, 310, 4),
+(NULL, 93, 10000093, 270, 3),
+(NULL, 94, 10000094, 300, 2),
+(NULL, 95, 10000095, 330, 4),
+(NULL, 96, 10000096, 240, 3),
+(NULL, 97, 10000097, 280, 5),
+(NULL, 98, 10000098, 320, 4),
+(NULL, 99, 10000099, 260, 3),
+(NULL, 100, 10000100, 290, 2);
+
+CREATE TABLE ALQUILER(
+    ced_lector INT(10) NOT NULL REFERENCES LECTOR,
+    url_digital VARCHAR(100) REFERENCES RECURSO_DIGITAL,
+    serial_fisico INT(10) REFERENCES FORMATO_FISICO,
+    cod_libro INT(3) REFERENCES FORMATO_FISICO,
+    codigo INT(5) PRIMARY KEY,
+    fecha_inicio DATE NOT NULL,
+    fecha_entrega DATE NOT NULL CHECK(fecha_entrega >= fecha_inicio),
+    numero_renovaciones INT(2) NOT NULL
 );
+
+/*En otras palabras, cuenta los libros que no tienen ni un recurso digital ni un formato físico asociado.*/
+select COUNT(*) 
+from libro 
+where NOT EXISTS(
+    SELECT * 
+    from recurso_digital 
+    WHERE recurso_digital.cod_libro = libro.codigo)
+AND NOT EXISTS(
+    SELECT * 
+    from formato_fisico 
+    WHERE formato_fisico.cod_libro = libro.codigo);
