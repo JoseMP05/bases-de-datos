@@ -6,8 +6,8 @@ include "../includes/header.php";
 <h1 class="mt-3">Consulta 2</h1>
 
 <p class="mt-3">
-    Sea sumavalor la suma de los valores de todos los proyectos asociados con un lector.
-    El segundo botón debe mostrar el código y el valor de cada uno de los proyectos 
+    Sea sumavalor la suma de los valores de todos los alquilers asociados con un lector.
+    El segundo botón debe mostrar el código y el valor de cada uno de los alquilers 
     que cumple todas las siguientes condiciones: tiene un valor mayor que el 
     presupuesto de la biblioteca que lo revisa y además el lector que lo revisa es el 
     gerente de la biblioteca que lo revisa.
@@ -18,7 +18,7 @@ include "../includes/header.php";
 require('../config/conexion.php');
 
 // Query SQL a la BD -> Crearla acá (No está completada, cambiarla a su contexto y a su analogía)
-$query = "SELECT codigo, valor FROM proyecto";
+$query = "SELECT codigo, valor FROM alquiler";
 
 // Ejecutar la consulta
 $resultadoC2 = mysqli_query($conn, $query) or die(mysqli_error($conn));

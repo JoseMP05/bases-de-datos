@@ -8,7 +8,7 @@ include "../includes/header.php";
 <p class="mt-3">
     Dos fechas f1 y f2 (cada fecha con día, mes y año), f2 ≥ f1 y un número entero n,
     n ≥ 0. Se debe mostrar la cédula y el celular de todos los lectors que han 
-    revisado exactamente n proyectos en dicho rango de fechas [f1, f2].
+    revisado exactamente n alquilers en dicho rango de fechas [f1, f2].
 </p>
 
 <!-- FORMULARIO. Cambiar los campos de acuerdo a su trabajo -->

@@ -3,12 +3,14 @@ include "../includes/header.php";
 ?>
 
 <!-- TÍTULO. Cambiarlo, pero dejar especificada la analogía -->
-<h1 class="mt-3">Entidad análoga a PROYECTO (NOMBRE)</h1>
-
+<h1 class="mt-3">Alquiler (Entidad análoga a PROYECTO/REVISION)</h1>
+<?php
+ $test = 'hola'
+?>
 <!-- FORMULARIO. Cambiar los campos de acuerdo a su trabajo -->
 <div class="formulario p-4 m-3 border rounded-3">
 
-    <form action="proyecto_insert.php" method="post" class="form-group">
+    <form action="alquiler_insert.php" method="post" class="form-group">
 
         <div class="mb-3">
             <label for="codigo" class="form-label">Código</label>
@@ -16,34 +18,50 @@ include "../includes/header.php";
         </div>
 
         <div class="mb-3">
-            <label for="fechacreacion" class="form-label">Fecha de creación</label>
-            <input type="date" class="form-control" id="fechacreacion" name="fechacreacion" required>
+            <label for="fechaAlquiler" class="form-label">Fecha del alquiler</label>
+            <input type="date" class="form-control" id="fechaAlquiler" name="fechaAlquiler" required>
         </div>
 
         <div class="mb-3">
-            <label for="valor" class="form-label">Valor</label>
-            <input type="number" class="form-control" id="valor" name="valor" required>
+            <label for="precio" class="form-label">Precio</label>
+            <input type="number" class="form-control" id="precio" name="precio" required>
         </div>
         
-        <!-- Consultar la lista de lectors y desplegarlos -->
+        <!-- Consultar la lista de lectores y desplegarlos -->
+        <?php
+        require("../lector/lector_select.php");
+        ?>
         <div class="mb-3">
-            <label for="lector" class="form-label">lector</label>
-            <select name="lector" id="lector" class="form-select">
+            <label for="lectorSolicita" class="form-label">Lector que solicita</label>
+            <select name="lectorSolicita" id="lectorSolicita" class="form-select">
                 
                 <!-- Option por defecto -->
                 <option value="" selected disabled hidden></option>
 
                 <?php
-                // Importar el código del otro archivo
-                require("../lector/lector_select.php");
-                
-                // Verificar si llegan datos
                 if($resultadoLector):
-                    
-                    // Iterar sobre los registros que llegaron
                     foreach ($resultadoLector as $fila):
                 ?>
+                <!-- Opción que se genera -->
+                <option value="<?= $fila["cedula"]; ?>"><?= $fila["nombre"]; ?> - C.C. <?= $fila["cedula"]; ?></option>
 
+                <?php
+                    endforeach;
+                endif;
+                ?>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="lectorDevuelve" class="form-label">Lector que devuelve</label>
+            <select name="lectorDevuelve" id="lectorDevuelve" class="form-select">
+                
+                <!-- Option por defecto -->
+                <option value=""   selected disabled hidden></option>
+                
+                <?php
+                if($resultadoLector):
+                    foreach ($resultadoLector as $fila):
+                ?>
                 <!-- Opción que se genera -->
                 <option value="<?= $fila["cedula"]; ?>"><?= $fila["nombre"]; ?> - C.C. <?= $fila["cedula"]; ?></option>
 
@@ -54,37 +72,6 @@ include "../includes/header.php";
                 ?>
             </select>
         </div>
-
-        <!-- Consultar la lista de bibliotecas y desplegarlos -->
-        <div class="mb-3">
-            <label for="biblioteca" class="form-label">biblioteca</label>
-            <select name="biblioteca" id="biblioteca" class="form-select">
-                
-                <!-- Option por defecto -->
-                <option value="" selected disabled hidden></option>
-
-                <?php
-                // Importar el código del otro archivo
-                require("../biblioteca/biblioteca_select.php");
-                
-                // Verificar si llegan datos
-                if($resultadoBiblioteca):
-                    
-                    // Iterar sobre los registros que llegaron
-                    foreach ($resultadoBiblioteca as $fila):
-                ?>
-
-                <!-- Opción que se genera -->
-                <option value="<?= $fila["nit"]; ?>"><?= $fila["nombre"]; ?> - NIT: <?= $fila["nit"]; ?></option>
-
-                <?php
-                        // Cerrar los estructuras de control
-                    endforeach;
-                endif;
-                ?>
-            </select>
-        </div>
-
         <button type="submit" class="btn btn-primary">Agregar</button>
 
     </form>
@@ -93,10 +80,10 @@ include "../includes/header.php";
 
 <?php
 // Importar el código del otro archivo
-require("proyecto_select.php");
+require("alquiler_select.php");
             
 // Verificar si llegan datos
-if($resultadoProyecto and $resultadoProyecto->num_rows > 0):
+if($resultadoAlquiler and $resultadoAlquiler->num_rows > 0):
 ?>
 
 <!-- MOSTRAR LA TABLA. Cambiar las cabeceras -->
@@ -109,9 +96,9 @@ if($resultadoProyecto and $resultadoProyecto->num_rows > 0):
             <tr>
                 <th scope="col" class="text-center">Código</th>
                 <th scope="col" class="text-center">Fecha de creación</th>
-                <th scope="col" class="text-center">Valor</th>
-                <th scope="col" class="text-center">lector</th>
-                <th scope="col" class="text-center">biblioteca</th>
+                <th scope="col" class="text-center">Precio</th>
+                <th scope="col" class="text-center">Lector que solicita</th>
+                <th scope="col" class="text-center">Lector que devuelve</th>
                 <th scope="col" class="text-center">Acciones</th>
             </tr>
         </thead>
@@ -120,21 +107,27 @@ if($resultadoProyecto and $resultadoProyecto->num_rows > 0):
 
             <?php
             // Iterar sobre los registros que llegaron
-            foreach ($resultadoProyecto as $fila):
+            foreach ($resultadoAlquiler as $fila):
             ?>
 
             <!-- Fila que se generará -->
             <tr>
                 <!-- Cada una de las columnas, con su valor correspondiente -->
                 <td class="text-center"><?= $fila["codigo"]; ?></td>
-                <td class="text-center"><?= $fila["fechacreacion"]; ?></td>
-                <td class="text-center">$<?= $fila["valor"]; ?></td>
-                <td class="text-center">C.C. <?= $fila["lector"]; ?></td>
-                <td class="text-center">NIT: <?= $fila["biblioteca"]; ?></td>
+                <td class="text-center"><?= $fila["fecha_alquiler"]; ?></td>
+                <td class="text-center"><?= $fila["precio"]; ?> COP</td>
+                <td class="text-center">C.C. <?= $fila["ced_lector_solicita"]; ?></td>
+                <td class="text-center">
+                    <?php if (!is_null($fila["ced_lector_devuelve"])):?>
+                        C.C. <?= $fila["ced_lector_devuelve"]; ?>
+                    <?php else: ?>
+                        No aplica
+                    <?php endif; ?>
+                </td>
                 
                 <!-- Botón de eliminar. Debe de incluir la CP de la entidad para identificarla -->
                 <td class="text-center">
-                    <form action="proyecto_delete.php" method="post">
+                    <form action="alquiler_delete.php" method="post">
                         <input hidden type="text" name="codigoEliminar" value="<?= $fila["codigo"]; ?>">
                         <button type="submit" class="btn btn-danger">Eliminar</button>
                     </form>

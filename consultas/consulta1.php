@@ -6,11 +6,11 @@ include "../includes/header.php";
 <h1 class="mt-3">Consulta 1</h1>
 
 <p class="mt-3">
-    Sea sumavalor la suma de los valores de todos los proyectos asociados con un lector.
+    Sea sumavalor la suma de los valores de todos los alquilers asociados con un lector.
     El primer botón debe mostrar la cédula y el nombre de cada uno de los lectors 
     que cumple todas las siguientes condiciones: es gerente, tiene sumavalor > 1000,
-    ha revisado al menos 3 proyectos y la biblioteca que gerencia no ha revisado ni un
-    solo proyecto.
+    ha revisado al menos 3 alquilers y la biblioteca que gerencia no ha revisado ni un
+    solo alquiler.
 </p>
 
 <?php

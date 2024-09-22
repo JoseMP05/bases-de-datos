@@ -4,7 +4,7 @@ proceder).*/
 
 SELECT cedula, nombre, count(cedula) as Alquileres_solicitados
 FROM lector INNER JOIN ALQUILER 
-ON lector.cedula = alquiler.ced_lector_solicitador 
+ON lector.cedula = alquiler.ced_lector_solicita 
 GROUP BY cedula
 ORDER BY Alquileres_solicitados DESC 
 LIMIT 3;
@@ -16,10 +16,10 @@ correspondientes lectores (en caso de empates, usted decide cómo proceder).*/
 
 SELECT cod_biblioteca, SUM(total) as total
 FROM lector INNER JOIN
- 	(SELECT ced_lector_solicitador, SUM(precio) AS total 
+ 	(SELECT ced_lector_solicita, SUM(precio) AS total 
 	FROM alquiler 
-	GROUP BY ced_lector_solicitador)
-ON lector.cedula = ced_lector_solicitador
+	GROUP BY ced_lector_solicita)
+ON lector.cedula = ced_lector_solicita
 GROUP BY cod_biblioteca
 ORDER BY total DESC;
 
@@ -30,7 +30,7 @@ OBTIENE: Se debe mostrar el total recaudado por el lector a raíz de los alquile
 */
 SELECT SUM(precio) as total_recaudado, nombre
 FROM lector INNER JOIN alquiler
-ON lector.cedula = alquiler.ced_lector_devolutor
+ON lector.cedula = alquiler.ced_lector_devuelve
 WHERE (cedula = 1000000009) AND (fecha_arquiler BETWEEN "2024-09-01" AND "2024-10-31")
 GROUP BY cedula;
 

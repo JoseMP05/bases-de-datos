@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta lang="es">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alquiler de Libros en Bibliotecas - Trabajo Final BD1</title>
@@ -45,7 +46,7 @@
         <ul>
             <li><a href="lector/lector.php">Lector (Entidad análoga a CLIENTE/MECANICO)</a></li>
             <li><a href="biblioteca/biblioteca.php">Biblioteca (Entidad análoga a EMPRESA/DEPARTAMENTO)</a></li>
-            <li><a href="proyecto/proyecto.php">Entidad análoga a PROYECTO (NOMBRE)</a></li>
+            <li><a href="alquiler/alquiler.php">Alquiler (Entidad análoga a PROYECTO/REVISION)</a></li>
             <li><a href="consultas/consulta1.php">Consulta 1</a></li>
             <li><a href="consultas/consulta2.php">Consulta 2</a></li>
             <li><a href="busqueda/busqueda1.php">Búsqueda 1</a></li>

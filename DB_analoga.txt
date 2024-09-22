@@ -21,9 +21,9 @@ CREATE TABLE ALQUILER(
     codigo INT(5) PRIMARY KEY CHECK(codigo >= 0),
     fecha_alquiler DATE NOT NULL,
     precio INT(6) NOT NULL CHECK(precio >= 0),
-    ced_lector_solicitador INT(10) NOT NULL REFERENCES LECTOR,
-    ced_lector_devolutor INT(10) REFERENCES LECTOR,
-    CHECK(ced_lector_devolutor IS NULL OR ced_lector_devolutor != ced_lector_solicitador)
+    ced_lector_solicita INT(10) NOT NULL REFERENCES LECTOR,
+    ced_lector_devuelve INT(10) REFERENCES LECTOR,
+    CHECK(ced_lector_devuelve IS NULL OR ced_lector_devuelve != ced_lector_solicita)
 );
 
 INSERT INTO BIBLIOTECA (codigo, nombre) VALUES
@@ -60,7 +60,7 @@ INSERT INTO LECTOR (cedula, nombre, puntuacion, cod_biblioteca) VALUES
 (1000000020, 'Camila Ramos', 97, 1004);
 
 -- Inserting data into ALQUILER table
-INSERT INTO ALQUILER (codigo, fecha_alquiler, precio, ced_lector_solicitador, ced_lector_devolutor) VALUES
+INSERT INTO ALQUILER (codigo, fecha_alquiler, precio, ced_lector_solicita, ced_lector_devuelve) VALUES
 (10001, '2024-09-01', 5000, 1000000001, 1000000002),
 (10002, '2024-09-02', 4500, 1000000003, 1000000004),
 (10003, '2024-09-03', 5500, 1000000005, 1000000006),

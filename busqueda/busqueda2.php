@@ -7,7 +7,7 @@ include "../includes/header.php";
 
 <p class="mt-3">
     Dos números enteros n1 y n2, n1 ≥ 0, n2 > n1. Se debe mostrar el nit y el 
-    nombre de todas las bibliotecas que han revisado entre n1 y n2 proyectos
+    nombre de todas las bibliotecas que han revisado entre n1 y n2 alquilers
     (intervalo cerrado [n1, n2]).
 </p>
 
