@@ -25,23 +25,23 @@ include "../includes/header.php";
             <input type="number" class="form-control" id="presupuesto" name="presupuesto" required>
         </div>
         
-        <!-- Consultar la lista de clientes y desplegarlos -->
+        <!-- Consultar la lista de lectors y desplegarlos -->
         <div class="mb-3">
-            <label for="cliente" class="form-label">Cliente</label>
-            <select name="cliente" id="cliente" class="form-select">
+            <label for="lector" class="form-label">lector</label>
+            <select name="lector" id="lector" class="form-select">
                 
                 <!-- Option por defecto -->
                 <option value="" selected disabled hidden></option>
 
                 <?php
                 // Importar el código del otro archivo
-                require("../cliente/cliente_select.php");
+                require("../lector/lector_select.php");
                 
                 // Verificar si llegan datos
-                if($resultadoCliente):
+                if($resultadoLector):
                     
                     // Iterar sobre los registros que llegaron
-                    foreach ($resultadoCliente as $fila):
+                    foreach ($resultadoLector as $fila):
                 ?>
 
                 <!-- Opción que se genera -->
@@ -80,7 +80,7 @@ if($resultadoEmpresa and $resultadoEmpresa->num_rows > 0):
                 <th scope="col" class="text-center">NIT</th>
                 <th scope="col" class="text-center">Nombre</th>
                 <th scope="col" class="text-center">Presupuesto</th>
-                <th scope="col" class="text-center">Cliente</th>
+                <th scope="col" class="text-center">lector</th>
                 <th scope="col" class="text-center">Acciones</th>
             </tr>
         </thead>
@@ -98,7 +98,7 @@ if($resultadoEmpresa and $resultadoEmpresa->num_rows > 0):
                 <td class="text-center"><?= $fila["nit"]; ?></td>
                 <td class="text-center"><?= $fila["nombre"]; ?></td>
                 <td class="text-center">$<?= $fila["presupuesto"]; ?></td>
-                <td class="text-center">C.C. <?= $fila["cliente"]; ?></td>
+                <td class="text-center">C.C. <?= $fila["lector"]; ?></td>
                 
                 <!-- Botón de eliminar. Debe de incluir la CP de la entidad para identificarla -->
                 <td class="text-center">

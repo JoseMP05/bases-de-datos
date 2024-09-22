@@ -7,10 +7,10 @@ require('../config/conexion.php');
 $nit = $_POST["nit"];
 $nombre = $_POST["nombre"];
 $presupuesto = $_POST["presupuesto"];
-$cliente = $_POST["cliente"];
+$lector = $_POST["lector"];
 
 // Query SQL a la BD. Si tienen que hacer comprobaciones, hacerlas acá (Generar una query diferente para casos especiales)
-$query = "INSERT INTO `empresa`(`nit`,`nombre`, `presupuesto`, `cliente`) VALUES ('$nit', '$nombre', '$presupuesto', '$cliente')";
+$query = "INSERT INTO `empresa`(`nit`,`nombre`, `presupuesto`, `lector`) VALUES ('$nit', '$nombre', '$presupuesto', '$lector')";
 
 // Ejecutar consulta
 $result = mysqli_query($conn, $query) or die(mysqli_error($conn));

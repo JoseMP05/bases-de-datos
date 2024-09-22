@@ -7,7 +7,7 @@ include "../includes/header.php";
 
 <p class="mt-3">
     Dos fechas f1 y f2 (cada fecha con día, mes y año), f2 ≥ f1 y un número entero n,
-    n ≥ 0. Se debe mostrar la cédula y el celular de todos los clientes que han 
+    n ≥ 0. Se debe mostrar la cédula y el celular de todos los lectors que han 
     revisado exactamente n proyectos en dicho rango de fechas [f1, f2].
 </p>
 
@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'):
     $numero = $_POST["numero"];
 
     // Query SQL a la BD -> Crearla acá (No está completada, cambiarla a su contexto y a su analogía)
-    $query = "SELECT cedula, celular FROM cliente";
+    $query = "SELECT cedula, celular FROM lector";
 
     // Ejecutar la consulta
     $resultadoB1 = mysqli_query($conn, $query) or die(mysqli_error($conn));

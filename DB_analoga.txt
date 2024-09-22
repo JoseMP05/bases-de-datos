@@ -10,10 +10,10 @@ CREATE TABLE BIBLIOTECA(
 
 -- Analogo de Mecanico
 CREATE TABLE LECTOR(
-    cod_biblioteca INT(4) NOT NULL REFERENCES BIBLIOTECA,
     cedula INT(10) PRIMARY KEY CHECK(cedula >= 0),
     nombre VARCHAR(100) NOT NULL,
-    puntuacion INT(6) NOT NULL CHECK(puntuacion >= 0)
+    puntuacion INT(6) NOT NULL CHECK(puntuacion >= 0),
+    cod_biblioteca INT(4) NOT NULL REFERENCES BIBLIOTECA (codigo)
 );
 
 -- Analogo de Reparacion
@@ -37,30 +37,30 @@ INSERT INTO BIBLIOTECA (codigo, nombre) VALUES
 (1008, 'Biblioteca Infantil');
 
 -- Inserting data into LECTOR table
-INSERT INTO LECTOR (cod_biblioteca, cedula, nombre, puntuacion) VALUES
-(1001, 1000000001, 'Juan Pérez', 85),
-(1001, 1000000002, 'María González', 92),
-(1002, 1000000003, 'Carlos Rodríguez', 78),
-(1002, 1000000004, 'Ana Martínez', 88),
-(1003, 1000000005, 'Luis Sánchez', 95),
-(1003, 1000000006, 'Elena Torres', 82),
-(1004, 1000000007, 'Diego Flores', 90),
-(1004, 1000000008, 'Sofía Vargas', 87),
-(1005, 1000000009, 'Roberto Mendoza', 93),
-(1005, 1000000010, 'Laura Jiménez', 86),
-(1006, 1000000011, 'Andrés Castro', 79),
-(1006, 1000000012, 'Carolina Ruiz', 91),
-(1007, 1000000013, 'Javier López', 84),
-(1007, 1000000014, 'Isabel Herrera', 89),
-(1008, 1000000015, 'Miguel Ángel Díaz', 96),
-(1008, 1000000016, 'Valentina Morales', 83),
-(1001, 1000000017, 'Fernando Gutiérrez', 88),
-(1002, 1000000018, 'Lucía Vega', 94),
-(1003, 1000000019, 'Gabriel Ortiz', 81),
-(1004, 1000000020, 'Camila Ramos', 97);
+INSERT INTO LECTOR (cedula, nombre, puntuacion, cod_biblioteca) VALUES
+(1000000001, 'Juan Pérez', 85, 1001),
+(1000000002, 'María González', 92, 1001),
+(1000000003, 'Carlos Rodríguez', 78, 1002),
+(1000000004, 'Ana Martínez', 88, 1002),
+(1000000005, 'Luis Sánchez', 95, 1003),
+(1000000006, 'Elena Torres', 82, 1003),
+(1000000007, 'Diego Flores', 90, 1004),
+(1000000008, 'Sofía Vargas', 87, 1004),
+(1000000009, 'Roberto Mendoza', 93, 1005),
+(1000000010, 'Laura Jiménez', 86, 1005),
+(1000000011, 'Andrés Castro', 79, 1006),
+(1000000012, 'Carolina Ruiz', 91, 1006),
+(1000000013, 'Javier López', 84, 1007),
+(1000000014, 'Isabel Herrera', 89, 1007),
+(1000000015, 'Miguel Ángel Díaz', 96, 1008),
+(1000000016, 'Valentina Morales', 83, 1008),
+(1000000017, 'Fernando Gutiérrez', 88, 1001),
+(1000000018, 'Lucía Vega', 94, 1002),
+(1000000019, 'Gabriel Ortiz', 81, 1003),
+(1000000020, 'Camila Ramos', 97, 1004);
 
 -- Inserting data into ALQUILER table
-INSERT INTO ALQUILER (codigo, fecha_arquiler, precio, ced_lector_solicitador, ced_lector_devolutor) VALUES
+INSERT INTO ALQUILER (codigo, fecha_alquiler, precio, ced_lector_solicitador, ced_lector_devolutor) VALUES
 (10001, '2024-09-01', 5000, 1000000001, 1000000002),
 (10002, '2024-09-02', 4500, 1000000003, 1000000004),
 (10003, '2024-09-03', 5500, 1000000005, 1000000006),
