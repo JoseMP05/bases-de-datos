@@ -1,0 +1,47 @@
+/*El primer botón debe mostrar la cédula y el nombre de los tres lectores que
+más alquileres han solicitado (en caso de empates, usted decide cómo
+proceder).*/
+
+SELECT cedula, nombre, count(cedula) as Alquileres_solicitados
+FROM lector INNER JOIN ALQUILER 
+ON lector.cedula = alquiler.ced_lector_solicitador 
+GROUP BY cedula
+ORDER BY Alquileres_solicitados DESC 
+LIMIT 3;
+
+/*El segundo botón debe mostrar el código y el nombre de la biblioteca de
+las tres bibliotecas que mayor dinero (suma del valor de todas sus
+alquileres) han recaudado a raíz de los alquileres que han hecho sus
+correspondientes lectores (en caso de empates, usted decide cómo proceder).*/
+
+SELECT cod_biblioteca, SUM(total) as total
+FROM lector INNER JOIN
+ 	(SELECT ced_lector_solicitador, SUM(precio) AS total 
+	FROM alquiler 
+	GROUP BY ced_lector_solicitador)
+ON lector.cedula = ced_lector_solicitador
+GROUP BY cod_biblioteca
+ORDER BY total DESC;
+
+/*
+INGRESAR: La cédula de un lector y un rango de fechas (es decir, dos fechas f1 y f2
+(cada fecha con día, mes y año) y f2 >= f1). 
+OBTIENE: Se debe mostrar el total recaudado por el lector a raíz de los alquileres que él devolvió junto con el nombre del lector.
+*/
+SELECT SUM(precio) as total_recaudado, nombre
+FROM lector INNER JOIN alquiler
+ON lector.cedula = alquiler.ced_lector_devolutor
+WHERE (cedula = 1000000009) AND (fecha_arquiler BETWEEN "2024-09-01" AND "2024-10-31")
+GROUP BY cedula;
+
+/*
+INGRESAR: El código de una biblioteca. 
+OBTIENE: Se debe mostrar, para el lector de mayor puntuacion adscrito a esa biblioteca, todos los datos de todos los alquileres que ese lector devolvió (en caso de empates, usted decide cómo proceder).
+*/
+
+SELECT alquiler.*
+FROM alquiler inner join (
+	SELECT cedula, MAX(puntuacion)
+  	FROM lector INNER JOIN biblioteca
+  	ON cod_biblioteca = 1003
+) 

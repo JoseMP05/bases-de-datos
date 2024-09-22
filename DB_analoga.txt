@@ -18,43 +18,76 @@ CREATE TABLE LECTOR(
 
 -- Analogo de Reparacion
 CREATE TABLE ALQUILER(
-    ced_lector INT(10) NOT NULL REFERENCES LECTOR,
     codigo INT(5) PRIMARY KEY CHECK(codigo >= 0),
-    fecha_arquiler DATE NOT NULL,
-    precio INT(6) NOT NULL CHECK(precio >= 0)
+    fecha_alquiler DATE NOT NULL,
+    precio INT(6) NOT NULL CHECK(precio >= 0),
+    ced_lector_solicitador INT(10) NOT NULL REFERENCES LECTOR,
+    ced_lector_devolutor INT(10) REFERENCES LECTOR,
+    CHECK(ced_lector_devolutor IS NULL OR ced_lector_devolutor != ced_lector_solicitador)
 );
 
-
--- Datos para la tabla BIBLIOTECA
 INSERT INTO BIBLIOTECA (codigo, nombre) VALUES
-(1, 'Biblioteca Central'),
-(2, 'Biblioteca Norte'),
-(3, 'Biblioteca Sur'),
-(4, 'Biblioteca Este'),
-(5, 'Biblioteca Oeste');
+(1001, 'Biblioteca Central'),
+(1002, 'Biblioteca Norte'),
+(1003, 'Biblioteca Sur'),
+(1004, 'Biblioteca Este'),
+(1005, 'Biblioteca Oeste'),
+(1006, 'Biblioteca Universitaria'),
+(1007, 'Biblioteca Pública Municipal'),
+(1008, 'Biblioteca Infantil');
 
--- Datos para la tabla LECTOR
+-- Inserting data into LECTOR table
 INSERT INTO LECTOR (cod_biblioteca, cedula, nombre, puntuacion) VALUES
-(1, 1000000001, 'Juan Perez', 85),
-(1, 1000000002, 'Maria Gomez', 90),
-(2, 1000000003, 'Carlos Sanchez', 75),
-(2, 1000000004, 'Ana Martinez', 80),
-(3, 1000000005, 'Luis Rodriguez', 95),
-(3, 1000000006, 'Laura Fernandez', 88),
-(4, 1000000007, 'Jose Ramirez', 70),
-(4, 1000000008, 'Marta Torres', 92),
-(5, 1000000009, 'Pedro Lopez', 78),
-(5, 1000000010, 'Lucia Morales', 83);
+(1001, 1000000001, 'Juan Pérez', 85),
+(1001, 1000000002, 'María González', 92),
+(1002, 1000000003, 'Carlos Rodríguez', 78),
+(1002, 1000000004, 'Ana Martínez', 88),
+(1003, 1000000005, 'Luis Sánchez', 95),
+(1003, 1000000006, 'Elena Torres', 82),
+(1004, 1000000007, 'Diego Flores', 90),
+(1004, 1000000008, 'Sofía Vargas', 87),
+(1005, 1000000009, 'Roberto Mendoza', 93),
+(1005, 1000000010, 'Laura Jiménez', 86),
+(1006, 1000000011, 'Andrés Castro', 79),
+(1006, 1000000012, 'Carolina Ruiz', 91),
+(1007, 1000000013, 'Javier López', 84),
+(1007, 1000000014, 'Isabel Herrera', 89),
+(1008, 1000000015, 'Miguel Ángel Díaz', 96),
+(1008, 1000000016, 'Valentina Morales', 83),
+(1001, 1000000017, 'Fernando Gutiérrez', 88),
+(1002, 1000000018, 'Lucía Vega', 94),
+(1003, 1000000019, 'Gabriel Ortiz', 81),
+(1004, 1000000020, 'Camila Ramos', 97);
 
--- Datos para la tabla ALQUILER
-INSERT INTO ALQUILER (ced_lector, codigo, fecha_arquiler, precio) VALUES
-(1000000001, 1, '2023-01-15', 5000),
-(1000000002, 2, '2023-02-20', 4500),
-(1000000003, 3, '2023-03-10', 6000),
-(1000000004, 4, '2023-04-05', 5500),
-(1000000005, 5, '2023-05-25', 7000),
-(1000000006, 6, '2023-06-15', 6500),
-(1000000007, 7, '2023-07-20', 4000),
-(1000000008, 8, '2023-08-10', 7500),
-(1000000009, 9, '2023-09-05', 4800),
-(1000000010, 10, '2023-10-01', 5300);
+-- Inserting data into ALQUILER table
+INSERT INTO ALQUILER (codigo, fecha_arquiler, precio, ced_lector_solicitador, ced_lector_devolutor) VALUES
+(10001, '2024-09-01', 5000, 1000000001, 1000000002),
+(10002, '2024-09-02', 4500, 1000000003, 1000000004),
+(10003, '2024-09-03', 5500, 1000000005, 1000000006),
+(10004, '2024-09-04', 4800, 1000000007, 1000000008),
+(10005, '2024-09-05', 5200, 1000000009, 1000000010),
+(10006, '2024-09-06', 4700, 1000000002, 1000000001),
+(10007, '2024-09-07', 5300, 1000000004, 1000000003),
+(10008, '2024-09-08', 4900, 1000000006, 1000000005),
+(10009, '2024-09-09', 5100, 1000000008, 1000000007),
+(10010, '2024-09-10', 5400, 1000000010, 1000000009),
+(10011, '2024-09-11', 4600, 1000000001, 1000000003),
+(10012, '2024-09-12', 5200, 1000000003, 1000000005),
+(10013, '2024-09-13', 4800, 1000000011, NULL),
+(10014, '2024-09-14', 5100, 1000000012, NULL),
+(10015, '2024-09-15', 5300, 1000000013, 1000000014),
+(10016, '2024-09-16', 4900, 1000000015, 1000000016),
+(10017, '2024-09-17', 5000, 1000000017, NULL),
+(10018, '2024-09-18', 5200, 1000000018, 1000000019),
+(10019, '2024-09-19', 4700, 1000000020, 1000000001),
+(10020, '2024-09-20', 5400, 1000000002, 1000000004),
+(10021, '2024-09-21', 4800, 1000000005, NULL),
+(10022, '2024-09-22', 5100, 1000000007, 1000000009),
+(10023, '2024-09-23', 5300, 1000000010, 1000000012),
+(10024, '2024-09-24', 4900, 1000000013, NULL),
+(10025, '2024-09-25', 5200, 1000000015, 1000000017),
+(10026, '2024-09-26', 4700, 1000000018, 1000000020),
+(10027, '2024-09-27', 5000, 1000000001, 1000000003),
+(10028, '2024-09-28', 5300, 1000000004, NULL),
+(10029, '2024-09-29', 4800, 1000000006, 1000000008),
+(10030, '2024-09-30', 5100, 1000000009, 1000000011);
