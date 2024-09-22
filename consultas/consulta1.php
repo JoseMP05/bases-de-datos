@@ -9,7 +9,7 @@ include "../includes/header.php";
     Sea sumavalor la suma de los valores de todos los proyectos asociados con un lector.
     El primer botón debe mostrar la cédula y el nombre de cada uno de los lectors 
     que cumple todas las siguientes condiciones: es gerente, tiene sumavalor > 1000,
-    ha revisado al menos 3 proyectos y la empresa que gerencia no ha revisado ni un
+    ha revisado al menos 3 proyectos y la biblioteca que gerencia no ha revisado ni un
     solo proyecto.
 </p>
 

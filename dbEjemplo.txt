@@ -4,7 +4,7 @@ CREATE TABLE lector(
   celular INT(10) NOT NULL
 );
 
-CREATE TABLE empresa(
+CREATE TABLE biblioteca(
   nit INT(10) PRIMARY KEY,
   nombre VARCHAR(50) NOT NULL,
   presupuesto INT(10) NOT NULL,
@@ -17,7 +17,7 @@ CREATE TABLE proyecto(
   fechacreacion DATE NOT NULL,
   valor INT(10) NOT NULL,
   lector INT(10),
-  empresa INT(10),
+  biblioteca INT(10),
   FOREIGN KEY(lector) REFERENCES lector,
-  FOREIGN KEY(empresa) REFERENCES empresa
+  FOREIGN KEY(biblioteca) REFERENCES biblioteca
 );

@@ -3,7 +3,7 @@
 ?>
 
 <!-- TÍTULO. Cambiarlo, pero dejar especificada la analogía -->
-<h1 class="mt-3">Entidad análoga a lector (LECTOR)</h1>
+<h1 class="mt-3">Lector (Entidad análoga a CLIENTE/MECANICO)</h1>
 
 <!-- FORMULARIO. Cambiar los campos de acuerdo a su trabajo -->
 <div class="formulario p-4 m-3 border rounded-3">
@@ -21,9 +21,31 @@
             <label for="puntuacion" class="form-label">Puntuación</label>
             <input type="number" class="form-control" id="puntuacion" name="puntuacion" required>
         </div>
+        <!-- Consultar la lista de BIBLIOTECAS y desplegarlas -->
         <div class="mb-3">
             <label for="biblioteca" class="form-label">Biblioteca</label>
-            <input type="number" class="form-control" id="biblioteca" name="biblioteca" required>
+            <select name="biblioteca" id="biblioteca" class="form-select">
+                
+                <!-- Option por defecto -->
+                <option value="" selected disabled hidden></option>
+
+                <?php
+                // Importar el código del otro archivo
+                require("../biblioteca/biblioteca_select.php");
+                
+                if($resultadoBiblioteca):
+                    foreach ($resultadoBiblioteca as $fila):
+                ?>
+
+                <!-- Opción que se genera -->
+                <option value="<?= $fila["codigo"]; ?>">#<?= $fila["codigo"]; ?> <?= $fila["nombre"]; ?></option>
+
+                <?php
+                        // Cerrar los estructuras de control
+                    endforeach;
+                endif;
+                ?>
+            </select>
         </div>
         <button type="submit" class="btn btn-primary">Agregar</button>
     </form>

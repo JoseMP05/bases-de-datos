@@ -55,23 +55,23 @@ include "../includes/header.php";
             </select>
         </div>
 
-        <!-- Consultar la lista de empresas y desplegarlos -->
+        <!-- Consultar la lista de bibliotecas y desplegarlos -->
         <div class="mb-3">
-            <label for="empresa" class="form-label">Empresa</label>
-            <select name="empresa" id="empresa" class="form-select">
+            <label for="biblioteca" class="form-label">biblioteca</label>
+            <select name="biblioteca" id="biblioteca" class="form-select">
                 
                 <!-- Option por defecto -->
                 <option value="" selected disabled hidden></option>
 
                 <?php
                 // Importar el código del otro archivo
-                require("../empresa/empresa_select.php");
+                require("../biblioteca/biblioteca_select.php");
                 
                 // Verificar si llegan datos
-                if($resultadoEmpresa):
+                if($resultadoBiblioteca):
                     
                     // Iterar sobre los registros que llegaron
-                    foreach ($resultadoEmpresa as $fila):
+                    foreach ($resultadoBiblioteca as $fila):
                 ?>
 
                 <!-- Opción que se genera -->
@@ -111,7 +111,7 @@ if($resultadoProyecto and $resultadoProyecto->num_rows > 0):
                 <th scope="col" class="text-center">Fecha de creación</th>
                 <th scope="col" class="text-center">Valor</th>
                 <th scope="col" class="text-center">lector</th>
-                <th scope="col" class="text-center">Empresa</th>
+                <th scope="col" class="text-center">biblioteca</th>
                 <th scope="col" class="text-center">Acciones</th>
             </tr>
         </thead>
@@ -130,7 +130,7 @@ if($resultadoProyecto and $resultadoProyecto->num_rows > 0):
                 <td class="text-center"><?= $fila["fechacreacion"]; ?></td>
                 <td class="text-center">$<?= $fila["valor"]; ?></td>
                 <td class="text-center">C.C. <?= $fila["lector"]; ?></td>
-                <td class="text-center">NIT: <?= $fila["empresa"]; ?></td>
+                <td class="text-center">NIT: <?= $fila["biblioteca"]; ?></td>
                 
                 <!-- Botón de eliminar. Debe de incluir la CP de la entidad para identificarla -->
                 <td class="text-center">

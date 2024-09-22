@@ -8,10 +8,10 @@ $codigo = $_POST["codigo"];
 $fechacreacion = $_POST["fechacreacion"];
 $valor = $_POST["valor"];
 $lector = $_POST["lector"];
-$empresa = $_POST["empresa"];
+$biblioteca = $_POST["biblioteca"];
 
 // Query SQL a la BD. Si tienen que hacer comprobaciones, hacerlas acá (Generar una query diferente para casos especiales)
-$query = "INSERT INTO `proyecto`(`codigo`,`fechacreacion`, `valor`, `lector`, `empresa`) VALUES ('$codigo', '$fechacreacion', '$valor', '$lector', '$empresa')";
+$query = "INSERT INTO `proyecto`(`codigo`,`fechacreacion`, `valor`, `lector`, `biblioteca`) VALUES ('$codigo', '$fechacreacion', '$valor', '$lector', '$biblioteca')";
 
 // Ejecutar consulta
 $result = mysqli_query($conn, $query) or die(mysqli_error($conn));

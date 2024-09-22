@@ -9,8 +9,8 @@ include "../includes/header.php";
     Sea sumavalor la suma de los valores de todos los proyectos asociados con un lector.
     El segundo botón debe mostrar el código y el valor de cada uno de los proyectos 
     que cumple todas las siguientes condiciones: tiene un valor mayor que el 
-    presupuesto de la empresa que lo revisa y además el lector que lo revisa es el 
-    gerente de la empresa que lo revisa.
+    presupuesto de la biblioteca que lo revisa y además el lector que lo revisa es el 
+    gerente de la biblioteca que lo revisa.
 </p>
 
 <?php

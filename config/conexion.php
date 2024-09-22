@@ -1,5 +1,7 @@
 <?php
-define('DB', 'bibliotecas');
+if (!defined('DB')) {
+  define('DB', 'bibliotecas');
+}
 
 $host = "localhost";
 $user = "root";

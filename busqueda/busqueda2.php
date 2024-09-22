@@ -7,7 +7,7 @@ include "../includes/header.php";
 
 <p class="mt-3">
     Dos números enteros n1 y n2, n1 ≥ 0, n2 > n1. Se debe mostrar el nit y el 
-    nombre de todas las empresas que han revisado entre n1 y n2 proyectos
+    nombre de todas las bibliotecas que han revisado entre n1 y n2 proyectos
     (intervalo cerrado [n1, n2]).
 </p>
 
@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'):
     $numero2 = $_POST["numero2"];
 
     // Query SQL a la BD -> Crearla acá (No está completada, cambiarla a su contexto y a su analogía)
-    $query = "SELECT nit, nombre FROM empresa";
+    $query = "SELECT nit, nombre FROM biblioteca";
 
     // Ejecutar la consulta
     $resultadoB2 = mysqli_query($conn, $query) or die(mysqli_error($conn));
