@@ -2,11 +2,11 @@
 más alquileres han solicitado (en caso de empates, usted decide cómo
 proceder).*/
 
-SELECT cedula, nombre, count(cedula) as Alquileres_solicitados
+SELECT cedula, nombre, count(cedula) as Alquileres_solicitados, SUM(precio) as total
 FROM lector INNER JOIN ALQUILER 
 ON lector.cedula = alquiler.ced_lector_solicita 
 GROUP BY cedula
-ORDER BY Alquileres_solicitados DESC 
+ORDER BY Alquileres_solicitados DESC, total DESC
 LIMIT 3;
 
 /*El segundo botón debe mostrar el código y el nombre de la biblioteca de
@@ -17,10 +17,11 @@ correspondientes lectores (en caso de empates, usted decide cómo proceder).*/
 SELECT biblioteca.codigo, biblioteca.nombre, SUM(precio) as total
 FROM biblioteca INNER JOIN lector
 ON biblioteca.codigo = lector.cod_biblioteca
-	INNER JOIN alquiler
-	ON lector.cedula = ced_lector_solicita
+		INNER JOIN alquiler
+		ON lector.cedula = ced_lector_solicita
 GROUP BY biblioteca.codigo
-ORDER BY total DESC;
+ORDER BY total DESC
+LIMIT 3;
 
 /*
 INGRESAR: La cédula de un lector y un rango de fechas (es decir, dos fechas f1 y f2

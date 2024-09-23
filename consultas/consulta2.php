@@ -6,11 +6,10 @@ include "../includes/header.php";
 <h1 class="mt-3">Consulta 2</h1>
 
 <p class="mt-3">
-    Sea sumavalor la suma de los valores de todos los alquilers asociados con un lector.
-    El segundo botón debe mostrar el código y el valor de cada uno de los alquilers 
-    que cumple todas las siguientes condiciones: tiene un valor mayor que el 
-    presupuesto de la biblioteca que lo revisa y además el lector que lo revisa es el 
-    gerente de la biblioteca que lo revisa.
+    El segundo botón debe mostrar el <strong>código</strong> y el <strong>nombre</strong> de
+    <strong>las tres</strong> bibliotecas que mayor dinero (suma del valor de todas sus
+    alquileres) han recaudado a raíz de los alquileres que han hecho sus
+    correspondientes lectores (en caso de empates, usted decide cómo proceder).
 </p>
 
 <?php
@@ -18,7 +17,14 @@ include "../includes/header.php";
 require('../config/conexion.php');
 
 // Query SQL a la BD -> Crearla acá (No está completada, cambiarla a su contexto y a su analogía)
-$query = "SELECT codigo, valor FROM alquiler";
+$query = "SELECT biblioteca.codigo, biblioteca.nombre, SUM(precio) as total
+        FROM biblioteca INNER JOIN lector
+        ON biblioteca.codigo = lector.cod_biblioteca
+            INNER JOIN alquiler
+            ON lector.cedula = ced_lector_solicita
+        GROUP BY biblioteca.codigo
+        ORDER BY total DESC
+        LIMIT 3;";
 
 // Ejecutar la consulta
 $resultadoC2 = mysqli_query($conn, $query) or die(mysqli_error($conn));
@@ -39,7 +45,7 @@ if($resultadoC2 and $resultadoC2->num_rows > 0):
         <!-- Títulos de la tabla, cambiarlos -->
         <thead class="table-dark">
             <tr>
-                <th scope="col" class="text-center">Cédula</th>
+                <th scope="col" class="text-center">Código</th>
                 <th scope="col" class="text-center">Nombre</th>
             </tr>
         </thead>
@@ -54,7 +60,7 @@ if($resultadoC2 and $resultadoC2->num_rows > 0):
             <!-- Fila que se generará -->
             <tr>
                 <!-- Cada una de las columnas, con su valor correspondiente -->
-                <td class="text-center"><?= $fila["cedula"]; ?></td>
+                <td class="text-center"><?= $fila["codigo"]; ?></td>
                 <td class="text-center"><?= $fila["nombre"]; ?></td>
             </tr>
 

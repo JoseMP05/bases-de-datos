@@ -6,19 +6,21 @@ include "../includes/header.php";
 <h1 class="mt-3">Consulta 1</h1>
 
 <p class="mt-3">
-    Sea sumavalor la suma de los valores de todos los alquilers asociados con un lector.
-    El primer botón debe mostrar la cédula y el nombre de cada uno de los lectors 
-    que cumple todas las siguientes condiciones: es gerente, tiene sumavalor > 1000,
-    ha revisado al menos 3 alquilers y la biblioteca que gerencia no ha revisado ni un
-    solo alquiler.
+    El primer botón debe mostrar la cédula y el nombre de los tres lectores que
+    más alquileres han solicitado (en caso de empates, usted decide cómo
+    proceder).
 </p>
 
 <?php
 // Crear conexión con la BD
 require('../config/conexion.php');
 
-// Query SQL a la BD -> Crearla acá (No está completada, cambiarla a su contexto y a su analogía)
-$query = "SELECT cedula, nombre FROM lector";
+$query = "SELECT cedula, nombre, count(cedula) as Alquileres_solicitados, SUM(precio) as total
+        FROM lector INNER JOIN ALQUILER 
+        ON lector.cedula = alquiler.ced_lector_solicita 
+        GROUP BY cedula
+        ORDER BY Alquileres_solicitados DESC, total DESC
+        LIMIT 3;";
 
 // Ejecutar la consulta
 $resultadoC1 = mysqli_query($conn, $query) or die(mysqli_error($conn));
