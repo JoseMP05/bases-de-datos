@@ -14,13 +14,12 @@ las tres bibliotecas que mayor dinero (suma del valor de todas sus
 alquileres) han recaudado a raíz de los alquileres que han hecho sus
 correspondientes lectores (en caso de empates, usted decide cómo proceder).*/
 
-SELECT cod_biblioteca, SUM(total) as total
-FROM lector INNER JOIN
- 	(SELECT ced_lector_solicita, SUM(precio) AS total 
-	FROM alquiler 
-	GROUP BY ced_lector_solicita)
-ON lector.cedula = ced_lector_solicita
-GROUP BY cod_biblioteca
+SELECT biblioteca.codigo, biblioteca.nombre, SUM(precio) as total
+FROM biblioteca INNER JOIN lector
+ON biblioteca.codigo = lector.cod_biblioteca
+	INNER JOIN alquiler
+	ON lector.cedula = ced_lector_solicita
+GROUP BY biblioteca.codigo
 ORDER BY total DESC;
 
 /*
