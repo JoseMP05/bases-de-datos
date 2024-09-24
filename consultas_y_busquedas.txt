@@ -41,7 +41,8 @@ OBTIENE: Se debe mostrar, para el lector de mayor puntuacion adscrito a esa bibl
 
 SELECT alquiler.*
 FROM alquiler inner join (
-	SELECT cedula, MAX(puntuacion)
+	SELECT cedula, MAX(puntuacion) as mayor
   	FROM lector INNER JOIN biblioteca
-  	ON cod_biblioteca = 1003
-) 
+  	ON cod_biblioteca = 1004
+)
+ON alquiler.ced_lector_devuelve = cedula;
