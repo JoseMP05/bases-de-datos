@@ -28,8 +28,8 @@ include "../includes/header.php";
         </div>
 
         <div class="mb-3">
-            <label for="numero" class="form-label">Número</label>
-            <input type="number" class="form-control" id="numero" name="numero" required>
+            <label for="cedula" class="form-label">Cédula</label>
+            <input type="number" class="form-control" id="cedula" name="cedula" required>
         </div>
 
         <button type="submit" class="btn btn-primary">Buscar</button>
@@ -47,10 +47,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'):
 
     $fecha1 = $_POST["fecha1"];
     $fecha2 = $_POST["fecha2"];
-    $numero = $_POST["numero"];
+    $cedula = $_POST["cedula"];
 
     // Query SQL a la BD -> Crearla acá (No está completada, cambiarla a su contexto y a su analogía)
-    $query = "SELECT cedula, celular FROM lector";
+    $query = "SELECT SUM(precio) as total_recaudado, nombre
+          FROM lector INNER JOIN alquiler
+          ON lector.cedula = alquiler.ced_lector_devuelve
+          WHERE (lector.cedula = '$cedula') AND (fecha_alquiler BETWEEN $fecha1 AND $fecha2)
+          GROUP BY lector.cedula;";
 
     // Ejecutar la consulta
     $resultadoB1 = mysqli_query($conn, $query) or die(mysqli_error($conn));
@@ -69,8 +73,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'):
         <!-- Títulos de la tabla, cambiarlos -->
         <thead class="table-dark">
             <tr>
+                <th scope="col" class="text-center">Total recaudado</th>
                 <th scope="col" class="text-center">Cédula</th>
-                <th scope="col" class="text-center">Celular</th>
             </tr>
         </thead>
 
@@ -84,8 +88,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'):
             <!-- Fila que se generará -->
             <tr>
                 <!-- Cada una de las columnas, con su valor correspondiente -->
-                <td class="text-center"><?= $fila["cedula"]; ?></td>
-                <td class="text-center"><?= $fila["celular"]; ?></td>
+                <td class="text-center"><?= $fila["total_recaudado"]; ?></td>
+                <td class="text-center"><?= $fila["nombre"]; ?></td>
             </tr>
 
             <?php
