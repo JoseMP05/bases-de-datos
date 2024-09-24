@@ -5,10 +5,14 @@ include "../includes/header.php";
 <!-- TÍTULO. Cambiarlo, pero dejar especificada la analogía -->
 <h1 class="mt-3">Búsqueda 1</h1>
 
-<p class="mt-3">
-    Dos fechas f1 y f2 (cada fecha con día, mes y año), f2 ≥ f1 y un número entero n,
-    n ≥ 0. Se debe mostrar la cédula y el celular de todos los lectors que han 
-    revisado exactamente n alquilers en dicho rango de fechas [f1, f2].
+<h2 class="mt-5">INGRESAR</h2>
+<p>
+    La cédula de un lector y un rango de fechas (es decir, dos fechas f1 y f2
+    (cada fecha con día, mes y año) y f2 >= f1).
+</p>
+<h2>OBTIENE</h2>
+<p>
+    Se debe mostrar el total recaudado por el lector a raíz de los alquileres que él devolvió junto con el nombre del lector.
 </p>
 
 <!-- FORMULARIO. Cambiar los campos de acuerdo a su trabajo -->
@@ -29,7 +33,28 @@ include "../includes/header.php";
 
         <div class="mb-3">
             <label for="cedula" class="form-label">Cédula</label>
-            <input type="number" class="form-control" id="cedula" name="cedula" required>
+            <select name="cedula" id="cedula" class="form-select">
+                
+                <!-- Option por defecto -->
+                <option value="" selected disabled hidden></option>
+
+                <?php
+                // Importar el código del otro archivo
+                require("../lector/lector_select.php");
+                
+                if($resultadoLector):
+                    foreach ($resultadoLector as $fila):
+                ?>
+
+                <!-- Opción que se genera -->
+                <option value="<?= $fila["cedula"]; ?>"><?= $fila["nombre"]; ?> - C.C. <?= $fila["cedula"]; ?></option>
+
+                <?php
+                        // Cerrar los estructuras de control
+                    endforeach;
+                endif;
+                ?>
+            </select>
         </div>
 
         <button type="submit" class="btn btn-primary">Buscar</button>
@@ -53,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'):
     $query = "SELECT SUM(precio) as total_recaudado, nombre
           FROM lector INNER JOIN alquiler
           ON lector.cedula = alquiler.ced_lector_devuelve
-          WHERE (lector.cedula = '$cedula') AND (fecha_alquiler BETWEEN $fecha1 AND $fecha2)
+          WHERE (lector.cedula = '$cedula') AND (fecha_alquiler BETWEEN '$fecha1' AND '$fecha2')
           GROUP BY lector.cedula;";
 
     // Ejecutar la consulta
@@ -106,10 +131,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'):
 <?php
 else:
 ?>
-
-<div class="alert alert-danger text-center mt-5">
-    No se encontraron resultados para esta consulta
-</div>
+    <?php
+        if($fecha1 > $fecha2):
+    ?>
+        <div class="alert alert-danger text-center mt-5">
+            <strong>La fecha 1 debe ser menor o igual a la fecha 2</strong>
+        </div>
+    <?php
+        endif;
+    ?>
+    <div class="alert alert-danger text-center mt-5">
+        <div>No se encontraron resultados para la busqueda:</div>
+        <div>
+            <span><strong>Fecha 1: </strong><?= $fecha1 ?>,</span>
+            <span><strong>Fecha 2: </strong><?= $fecha2 ?>,</span>
+            <span><strong>Cedúla: </strong><?= $cedula ?></span>
+        </div>
+    </div>
 
 <?php
     endif;
