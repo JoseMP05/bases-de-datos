@@ -37,7 +37,7 @@ if($resultadoBiblioteca and $resultadoBiblioteca->num_rows > 0):
         <!-- Títulos de la tabla, cambiarlos -->
         <thead class="table-dark">
             <tr>
-                <th scope="col" class="text-center">Codigo</th>
+                <th scope="col" class="text-center">Código</th>
                 <th scope="col" class="text-center">Nombre</th>
                 <th scope="col" class="text-center">Acciones</th>
             </tr>

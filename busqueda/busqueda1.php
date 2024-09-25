@@ -99,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST'):
         <thead class="table-dark">
             <tr>
                 <th scope="col" class="text-center">Total recaudado</th>
-                <th scope="col" class="text-center">Cédula</th>
+                <th scope="col" class="text-center">Nombre</th>
             </tr>
         </thead>
 
