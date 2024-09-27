@@ -43,6 +43,7 @@ CREATE TABLE ESTANTERIA(
     numero NUMBER(3),
     genero VARCHAR(20) NOT NULL CHECK(genero in ('comedia', 'tragedia', 'ciencia ficcion', 'romance', 'aventura', 'terror')),
     PRIMARY KEY(cod_biblioteca, numero)
+    /*Un libro en formato físico sólo puede ser albergado en una estantería de su género correspondiente. (Controlar con programación)*/
 );
 
 CREATE TABLE AUTOR(
@@ -56,6 +57,8 @@ CREATE TABLE LIBRO(
     editorial VARCHAR(50) NOT NULL,
     genero VARCHAR(20) NOT NULL CHECK(genero in ('comedia', 'tragedia', 'ciencia ficcion', 'romance', 'aventura', 'terror')),
     fecha_publicacion DATE NOT NULL
+    /*Un libro debe ser distribuido mínimamente como recurso digital o como formato físico, pudiendo ser ambos. (Controlar con programación).*/
+    /*En el caso de que dos o más libros tengan el mismo título, estos deben ser de un autor distinto.  (Controlar con programación)*/
 );
 
 CREATE TABLE AUTORIA(
@@ -98,6 +101,11 @@ CREATE TABLE ALQUILER(
     CHECK(fecha_entrega >= fecha_inicio),
     CHECK(ced_lector_devuelve IS NULL OR ced_lector_devuelve != ced_lector_solicita),
     CHECK((url_digital IS NULL AND (serial_fisico IS NOT NULL AND cod_libro IS NOT NULL)) OR (url_digital IS NOT NULL AND (serial_fisico IS NULL AND cod_libro IS NULL)))
+    /*Sí un lector alquila el formato físico de un libro que también se encuentra en formato digital, este no podrá alquilar el mismo libro en formato digital hasta no haber finalizado el alquiler del libro en formato físico. (Controlar con programación).*/
+    /*Sí un lector alquila el formato digital de un libro que también se encuentra en formato físico, este no podrá alquilar el mismo libro en formato físico hasta no haber finalizado el alquiler del libro en formato digital.  (Controlar con programación).*/
+    /*Cada que se alquila un libro en formato físico: stock = stock - 1.  (Controlar con programación)*/
+    /*Para alquilar un libro en formato físico se debe cumplir: stock >= 1.  (Controlar con programación)*/
+    /*Cuando un libro en formato físico es devuelto: stock = stock - 1. (Controlar con programación).*/
 );
 
 INSERT INTO biblioteca(codigo, nombre, email, tipo)
