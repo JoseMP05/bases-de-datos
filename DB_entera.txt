@@ -11,22 +11,22 @@ DROP TABLE FORMATO_FISICO;
 DROP TABLE ALQUILER;
 
 CREATE TABLE BIBLIOTECA(
-    codigo INT(4) PRIMARY KEY,
+    codigo NUMBER(4) PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     email VARCHAR(50) NOT NULL, 
     tipo VARCHAR(10) NOT NULL CHECK(tipo = 'FISICA' OR tipo = 'DIGITAL')
 );
 
 CREATE TABLE FISICA(
-    cod_biblioteca INT(4) PRIMARY KEY REFERENCES biblioteca,
+    cod_biblioteca NUMBER(4) PRIMARY KEY REFERENCES biblioteca,
     direccion VARCHAR(100) NOT NULL, 
     telefono VARCHAR(10) NOT NULL
 );
 
 CREATE TABLE DIGITAL(
-    cod_biblioteca INT(4) PRIMARY KEY REFERENCES biblioteca,
+    cod_biblioteca NUMBER(4) PRIMARY KEY REFERENCES biblioteca,
     pagina_web VARCHAR(100) NOT NULL,
-    filial INT(4) UNIQUE REFERENCES fisica
+    filial NUMBER(4) UNIQUE REFERENCES fisica
 );
 
 INSERT INTO biblioteca(codigo, nombre, email, tipo)
@@ -81,12 +81,12 @@ INSERT INTO digital (cod_biblioteca, pagina_web)
 VALUES (80, "bibliotecanacional.gov.co");
 
 CREATE TABLE LECTOR(
-    cod_biblioteca INT(4) NOT NULL REFERENCES BIBLIOTECA,
-    cedula BIGINT(10) PRIMARY KEY,
+    cod_biblioteca NUMBER(4) NOT NULL REFERENCES BIBLIOTECA,
+    cedula BIGNUMBER(10) PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
     telefono VARCHAR(10) NOT NULL,
     email VARCHAR(50) NOT NULL,
-    puntuacion INT(3) NOT NULL CHECK(puntuacion >= 0 AND puntuacion <= 100)
+    puntuacion NUMBER(3) NOT NULL CHECK(puntuacion >= 0 AND puntuacion <= 100)
 );
 
 -- Biblioteca Tomas Carrasquilla (código 10)
@@ -162,8 +162,8 @@ VALUES
 (80, 8234567894, 'Gabriela Ramírez', '3075678901', 'gabrielaramirez@gmail.com', 90);
 
 CREATE TABLE ESTANTERIA(
-    cod_biblioteca INT(4) NOT NULL REFERENCES FISICA,
-    numero INT(3),
+    cod_biblioteca NUMBER(4) NOT NULL REFERENCES FISICA,
+    numero NUMBER(3),
     genero VARCHAR(20) NOT NULL CHECK(genero in ('comedia', 'tragedia', 'ciencia ficcion', 'romance', 'aventura', 'terror')),
     PRIMARY KEY(cod_biblioteca, numero)
 );
@@ -251,7 +251,7 @@ INSERT INTO AUTOR (cedula, nombre) VALUES
 ('1000000025', 'Vicente Aleixandre');
 
 CREATE TABLE LIBRO(
-    codigo INT(4) PRIMARY KEY,
+    codigo NUMBER(4) PRIMARY KEY,
     titulo VARCHAR(100) NOT NULL,
     editorial VARCHAR(50) NOT NULL,
     genero VARCHAR(20) NOT NULL CHECK(genero in ('comedia', 'tragedia', 'ciencia ficcion', 'romance', 'aventura', 'terror')),
@@ -362,8 +362,8 @@ INSERT INTO LIBRO (codigo, titulo, editorial, genero, fecha_publicacion) VALUES
 
 CREATE TABLE AUTORIA(
     ced_autor VARCHAR(10) NOT NULL REFERENCES AUTOR,
-    cod_libro INT(4) NOT NULL REFERENCES LIBRO,
-    porcentaje_aporte INT(3) NOT NULL,
+    cod_libro NUMBER(4) NOT NULL REFERENCES LIBRO,
+    porcentaje_aporte NUMBER(3) NOT NULL,
     PRIMARY KEY(ced_autor, cod_libro)
 );
 
@@ -424,20 +424,20 @@ INSERT INTO AUTORIA (ced_autor, cod_libro, porcentaje_aporte) VALUES
 ('1000000004', 50, 100);
 
 CREATE TABLE RECURSO_DIGITAL(
-    cod_biblioteca INT(4) NOT NULL REFERENCES DIGITAL,
-    cod_libro INT(4) NOT NULL REFERENCES LIBRO,
+    cod_biblioteca NUMBER(4) NOT NULL REFERENCES DIGITAL,
+    cod_libro NUMBER(4) NOT NULL REFERENCES LIBRO,
     url VARCHAR(100) PRIMARY KEY,
-    tamaño INT(4) NOT NULL, /*Tamaño en MB*/
-    capacidad INT(4) NOT NULL /*Capacidad maxima de visitas simultaneas*/
+    tamaño NUMBER(4) NOT NULL, /*Tamaño en MB*/
+    capacidad NUMBER(4) NOT NULL /*Capacidad maxima de visitas simultaneas*/
 );
 
 CREATE TABLE FORMATO_FISICO(
-    num_estanteria INT(3) REFERENCES ESTANTERIA,
-    /*cod_biblioteca INT(4) REFERENCES ESTANTERIA,*/
-    cod_libro INT(4) NOT NULL REFERENCES LIBRO,
-    num_serial INT(8),
-    numero_paginas INT(4) NOT NULL,
-    stock INT(3) NOT NULL,
+    num_estanteria NUMBER(3) REFERENCES ESTANTERIA,
+    /*cod_biblioteca NUMBER(4) REFERENCES ESTANTERIA,*/
+    cod_libro NUMBER(4) NOT NULL REFERENCES LIBRO,
+    num_serial NUMBER(8),
+    numero_paginas NUMBER(4) NOT NULL,
+    stock NUMBER(3) NOT NULL,
     PRIMARY KEY(num_serial,cod_libro)
 );
 
@@ -578,14 +578,14 @@ INSERT INTO FORMATO_FISICO (num_estanteria, cod_libro, num_serial, numero_pagina
 (NULL, 100, 10000100, 290, 2);
 
 CREATE TABLE ALQUILER(
-    ced_lector BIGINT(10) NOT NULL REFERENCES LECTOR,
+    ced_lector BIGNUMBER(10) NOT NULL REFERENCES LECTOR,
     url_digital VARCHAR(100) REFERENCES RECURSO_DIGITAL,
-    serial_fisico INT(10) REFERENCES FORMATO_FISICO,
-    cod_libro INT(3) REFERENCES FORMATO_FISICO,
-    codigo INT(5) PRIMARY KEY,
+    serial_fisico NUMBER(10) REFERENCES FORMATO_FISICO,
+    cod_libro NUMBER(3) REFERENCES FORMATO_FISICO,
+    codigo NUMBER(5) PRIMARY KEY,
     fecha_inicio DATE NOT NULL,
     fecha_entrega DATE NOT NULL CHECK(fecha_entrega >= fecha_inicio),
-    precio INT(6) NOT NULL
+    precio NUMBER(6) NOT NULL
 );
 
 -- Inserciones de alquileres de recursos digitales
@@ -607,15 +607,3 @@ INSERT INTO ALQUILER(ced_lector,serial_fisico,cod_libro,codigo,
                     (1234567892, 10000084,84,8,'2022-02-11','2022-02-26',4500),
                     (1234567894, 10000086,86,11,'2020-01-10','2020-01-25',21000),
                     (1234567894, 10000088,88,12,'2019-04-12','2019-04-27',9000);
-
-/*En otras palabras, cuenta los libros que no tienen ni un recurso digital ni un formato físico asociado.*/
-select COUNT(*) 
-from libro 
-where NOT EXISTS(
-    SELECT * 
-    from recurso_digital 
-    WHERE recurso_digital.cod_libro = libro.codigo)
-AND NOT EXISTS(
-    SELECT * 
-    from formato_fisico 
-    WHERE formato_fisico.cod_libro = libro.codigo);
