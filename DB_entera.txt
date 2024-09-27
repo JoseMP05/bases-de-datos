@@ -29,6 +29,77 @@ CREATE TABLE DIGITAL(
     filial NUMBER(4) UNIQUE REFERENCES fisica
 );
 
+CREATE TABLE LECTOR(
+    cedula NUMBER(10) PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    telefono VARCHAR(10) NOT NULL,
+    email VARCHAR(50) NOT NULL,
+    puntuacion NUMBER(3) NOT NULL CHECK(puntuacion >= 0 AND puntuacion <= 100),
+    cod_biblioteca NUMBER(4) NOT NULL REFERENCES BIBLIOTECA
+);
+
+CREATE TABLE ESTANTERIA(
+    cod_biblioteca NUMBER(4) NOT NULL REFERENCES FISICA,
+    numero NUMBER(3),
+    genero VARCHAR(20) NOT NULL CHECK(genero in ('comedia', 'tragedia', 'ciencia ficcion', 'romance', 'aventura', 'terror')),
+    PRIMARY KEY(cod_biblioteca, numero)
+);
+
+CREATE TABLE AUTOR(
+    cedula VARCHAR(10) PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE LIBRO(
+    codigo NUMBER(4) PRIMARY KEY,
+    titulo VARCHAR(100) NOT NULL,
+    editorial VARCHAR(50) NOT NULL,
+    genero VARCHAR(20) NOT NULL CHECK(genero in ('comedia', 'tragedia', 'ciencia ficcion', 'romance', 'aventura', 'terror')),
+    fecha_publicacion DATE NOT NULL
+);
+
+CREATE TABLE AUTORIA(
+    ced_autor VARCHAR(10) NOT NULL REFERENCES AUTOR,
+    cod_libro NUMBER(4) NOT NULL REFERENCES LIBRO,
+    porcentaje_aporte NUMBER(3) NOT NULL,
+    PRIMARY KEY(ced_autor, cod_libro)
+);
+
+CREATE TABLE RECURSO_DIGITAL(
+    cod_biblioteca NUMBER(4) NOT NULL REFERENCES DIGITAL,
+    cod_libro NUMBER(4) NOT NULL REFERENCES LIBRO,
+    url VARCHAR(100) PRIMARY KEY,
+    tamaño NUMBER(4) NOT NULL, /*Tamaño en MB*/
+    capacidad NUMBER(4) NOT NULL /*Capacidad maxima de visitas simultaneas*/
+);
+
+CREATE TABLE FORMATO_FISICO(
+    num_estanteria NUMBER(3),
+    cod_biblioteca NUMBER(4),
+    cod_libro NUMBER(4) NOT NULL REFERENCES LIBRO,
+    num_serial NUMBER(8) NOT NULL,
+    numero_paginas NUMBER(4) NOT NULL,
+    stock NUMBER(3) NOT NULL,
+    PRIMARY KEY(num_serial,cod_libro),
+    FOREIGN KEY(num_estanteria, cod_biblioteca) REFERENCES ESTANTERIA(numero, cod_biblioteca)
+);
+
+CREATE TABLE ALQUILER(
+    ced_lector_solicita NUMBER(10) NOT NULL REFERENCES lector (cedula),
+    ced_lector_devuelve NUMBER(10) REFERENCES lector,
+    url_digital VARCHAR(100) REFERENCES recurso_digital,
+    serial_fisico NUMBER(10),
+    cod_libro NUMBER(3),
+    codigo NUMBER(5) PRIMARY KEY,
+    fecha_inicio DATE NOT NULL,
+    fecha_entrega DATE NOT NULL,
+    precio NUMBER(6) NOT NULL,
+    FOREIGN KEY(serial_fisico, cod_libro) REFERENCES FORMATO_FISICO(num_serial, cod_libro),
+    CHECK(fecha_entrega >= fecha_inicio),
+    CHECK(ced_lector_devuelve IS NULL OR ced_lector_devuelve != ced_lector_solicita),
+    CHECK((url_digital IS NULL AND (serial_fisico IS NOT NULL AND cod_libro IS NOT NULL)) OR (url_digital IS NOT NULL AND (serial_fisico IS NULL AND cod_libro IS NULL)))
+);
+
 INSERT INTO biblioteca(codigo, nombre, email, tipo)
 VALUES (10, "Tomas Carrasquilla", "bibliotecatomascarrasquilla@gmail.com", "FISICA");
 
@@ -71,6 +142,9 @@ VALUES (70, "Gabriel García Márquez", "bibliotecagabrielgarciamarquez@gmail.co
 INSERT INTO fisica (cod_biblioteca, direccion, telefono)
 VALUES (60,"Carrera 80 # 104 - 04", "5571216");
 
+INSERT INTO fisica (cod_biblioteca, direccion, telefono)
+VALUES (70,"NO INTERESA", "5659525");
+
 INSERT INTO digital (cod_biblioteca, pagina_web, filial)
 VALUES (70, "bibliotecagabrielgarciamarquez.com.co", 70);
 
@@ -80,17 +154,9 @@ VALUES (80, "Biblioteca Nacional Virtual", "Bibliotecanacionalvirtual@gmail.com"
 INSERT INTO digital (cod_biblioteca, pagina_web)
 VALUES (80, "bibliotecanacional.gov.co");
 
-CREATE TABLE LECTOR(
-    cod_biblioteca NUMBER(4) NOT NULL REFERENCES BIBLIOTECA,
-    cedula BIGNUMBER(10) PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL,
-    telefono VARCHAR(10) NOT NULL,
-    email VARCHAR(50) NOT NULL,
-    puntuacion NUMBER(3) NOT NULL CHECK(puntuacion >= 0 AND puntuacion <= 100)
-);
 
 -- Biblioteca Tomas Carrasquilla (código 10)
-INSERT INTO LECTOR (cod_biblioteca, cedula, nombre, telefono, email, puntuacion)
+INSERT INTO lector (cod_biblioteca, cedula, nombre, telefono, email, puntuacion)
 VALUES 
 (10, 1234567890, 'Juan Pérez', '3001234567', 'juanperez@gmail.com', 85),
 (10, 1234567891, 'María García', '3002345678', 'mariagarcia@gmail.com', 90),
@@ -99,16 +165,16 @@ VALUES
 (10, 1234567894, 'Carlos Ramírez', '3005678901', 'carlosramirez@gmail.com', 95);
 
 -- Biblioteca Tomas Carrasquilla (Digital) (código 20)
-INSERT INTO LECTOR (cod_biblioteca, cedula, nombre, telefono, email, puntuacion)
+INSERT INTO lector (cod_biblioteca, cedula, nombre, telefono, email, puntuacion)
 VALUES 
-(20, 2234567890, 'Laura Gómez', '3011234567', 'lauragomez@gmail.com', 92),
-(20, 2234567891, 'Jorge López', '3012345678', 'jorgelopez@gmail.com', 50),
-(20, 2234567892, 'Carolina Rivera', '3013456789', 'carolinarivera@gmail.com', 78),
-(20, 2234567893, 'Miguel Díaz', '3014567890', 'migueldiaz@gmail.com', 80),
-(20, 2234567894, 'Lucía Sánchez', '3015678901', 'luciasanchez@gmail.com', 87);
+(20, 23456, 'Laura Gómez', '3011234567', 'lauragomez@gmail.com', 92),
+(20, 24567, 'Jorge López', '3012345678', 'jorgelopez@gmail.com', 50),
+(20, 25678, 'Carolina Rivera', '3013456789', 'carolinarivera@gmail.com', 78),
+(20, 26789, 'Miguel Díaz', '3014567890', 'migueldiaz@gmail.com', 80),
+(20, 27891, 'Lucía Sánchez', '3015678901', 'luciasanchez@gmail.com', 87);
 
 -- Biblioteca La Floresta (código 30)
-INSERT INTO LECTOR (cod_biblioteca, cedula, nombre, telefono, email, puntuacion)
+INSERT INTO lector (cod_biblioteca, cedula, nombre, telefono, email, puntuacion)
 VALUES 
 (30, 3234567890, 'Pedro González', '3021234567', 'pedrogonzalez@gmail.com', 77),
 (30, 3234567891, 'Natalia Morales', '3022345678', 'nataliamorales@gmail.com', 83),
@@ -117,7 +183,7 @@ VALUES
 (30, 3234567894, 'Andrés Beltrán', '3025678901', 'andresbeltran@gmail.com', 85);
 
 -- Biblioteca Miguel de Cervantes (Digital) (código 40)
-INSERT INTO LECTOR (cod_biblioteca, cedula, nombre, telefono, email, puntuacion)
+INSERT INTO lector (cod_biblioteca, cedula, nombre, telefono, email, puntuacion)
 VALUES 
 (40, 4234567890, 'Sofía Hernández', '3031234567', 'sofiahernandez@gmail.com', 91),
 (40, 4234567891, 'Felipe Cortés', '3032345678', 'felipecortes@gmail.com', 86),
@@ -126,7 +192,7 @@ VALUES
 (40, 4234567894, 'Carmen Fernández', '3035678901', 'carmenfernandez@gmail.com', 93);
 
 -- Biblioteca Altavista (código 50)
-INSERT INTO LECTOR (cod_biblioteca, cedula, nombre, telefono, email, puntuacion)
+INSERT INTO lector (cod_biblioteca, cedula, nombre, telefono, email, puntuacion)
 VALUES 
 (50, 5234567890, 'Mateo Serrano', '3041234567', 'mateoserrano@gmail.com', 82),
 (50, 5234567891, 'Isabella Ruiz', '3042345678', 'isabellaruiz@gmail.com', 87),
@@ -135,7 +201,7 @@ VALUES
 (50, 5234567894, 'Emilia Suárez', '3045678901', 'emiliasuarez@gmail.com', 85);
 
 -- Biblioteca Gabriel García Márquez (código 60)
-INSERT INTO LECTOR (cod_biblioteca, cedula, nombre, telefono, email, puntuacion)
+INSERT INTO lector (cod_biblioteca, cedula, nombre, telefono, email, puntuacion)
 VALUES 
 (60, 6234567890, 'Paula Vargas', '3051234567', 'paulavargas@gmail.com', 88),
 (60, 6234567891, 'Diego Paredes', '3052345678', 'diegoparedes@gmail.com', 91),
@@ -144,7 +210,7 @@ VALUES
 (60, 6234567894, 'Renata Jiménez', '3055678901', 'renatajimenez@gmail.com', 92);
 
 -- Biblioteca Gabriel García Márquez (Digital) (código 70)
-INSERT INTO LECTOR (cod_biblioteca, cedula, nombre, telefono, email, puntuacion)
+INSERT INTO lector (cod_biblioteca, cedula, nombre, telefono, email, puntuacion)
 VALUES 
 (70, 7234567890, 'Martín Salazar', '3061234567', 'martinsalazar@gmail.com', 80),
 (70, 7234567891, 'Andrea Villalobos', '3062345678', 'andreavillalobos@gmail.com', 85),
@@ -153,7 +219,7 @@ VALUES
 (70, 7234567894, 'Claudia Mendoza', '3065678901', 'claudiamendoza@gmail.com', 22);
 
 -- Biblioteca Nacional Virtual (código 80)
-INSERT INTO LECTOR (cod_biblioteca, cedula, nombre, telefono, email, puntuacion)
+INSERT INTO lector (cod_biblioteca, cedula, nombre, telefono, email, puntuacion)
 VALUES 
 (80, 8234567890, 'Francisco Meza', '3071234567', 'franciscomeza@gmail.com', 93),
 (80, 8234567891, 'Adriana Rojas', '3072345678', 'adrianarojas@gmail.com', 74),
@@ -161,15 +227,9 @@ VALUES
 (80, 8234567893, 'Elena Acosta', '3074567890', 'elenaacosta@gmail.com', 89),
 (80, 8234567894, 'Gabriela Ramírez', '3075678901', 'gabrielaramirez@gmail.com', 90);
 
-CREATE TABLE ESTANTERIA(
-    cod_biblioteca NUMBER(4) NOT NULL REFERENCES FISICA,
-    numero NUMBER(3),
-    genero VARCHAR(20) NOT NULL CHECK(genero in ('comedia', 'tragedia', 'ciencia ficcion', 'romance', 'aventura', 'terror')),
-    PRIMARY KEY(cod_biblioteca, numero)
-);
 
 -- Inserciones para la Biblioteca Tomas Carrasquilla (código 10)
-INSERT INTO ESTANTERIA (cod_biblioteca, numero, genero)
+INSERT INTO estanteria (cod_biblioteca, numero, genero)
 VALUES 
 (10, 1, 'comedia'),
 (10, 2, 'aventura'),
@@ -180,7 +240,7 @@ VALUES
 (10, 8, 'ciencia ficcion');
 
 -- Inserciones para la Biblioteca La Floresta (código 30)
-INSERT INTO ESTANTERIA (cod_biblioteca, numero, genero)
+INSERT INTO estanteria (cod_biblioteca, numero, genero)
 VALUES 
 (30, 1, 'romance'),
 (30, 2, 'tragedia'),
@@ -192,7 +252,7 @@ VALUES
 (30, 8, 'aventura');
 
 -- Inserciones para la Biblioteca Altavista (código 50)
-INSERT INTO ESTANTERIA (cod_biblioteca, numero, genero)
+INSERT INTO estanteria (cod_biblioteca, numero, genero)
 VALUES 
 (50, 1, 'terror'),
 (50, 2, 'ciencia ficcion'),
@@ -204,7 +264,7 @@ VALUES
 (50, 8, 'ciencia ficcion');
 
 -- Inserciones para la Biblioteca Gabriel García Márquez (código 60)
-INSERT INTO ESTANTERIA (cod_biblioteca, numero, genero)
+INSERT INTO estanteria (cod_biblioteca, numero, genero)
 VALUES 
 (60, 1, 'tragedia'),
 (60, 2, 'aventura'),
@@ -217,11 +277,6 @@ VALUES
 (60, 9, 'terror'),
 (60, 10, 'romance');
 
-
-CREATE TABLE AUTOR(
-    cedula VARCHAR(10) PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL
-);
 
 INSERT INTO AUTOR (cedula, nombre) VALUES
 ('1000000001', 'Gabriel García Márquez'),
@@ -250,13 +305,6 @@ INSERT INTO AUTOR (cedula, nombre) VALUES
 ('1000000024', 'Gustavo Adolfo Bécquer'),
 ('1000000025', 'Vicente Aleixandre');
 
-CREATE TABLE LIBRO(
-    codigo NUMBER(4) PRIMARY KEY,
-    titulo VARCHAR(100) NOT NULL,
-    editorial VARCHAR(50) NOT NULL,
-    genero VARCHAR(20) NOT NULL CHECK(genero in ('comedia', 'tragedia', 'ciencia ficcion', 'romance', 'aventura', 'terror')),
-    fecha_publicacion DATE NOT NULL
-);
 
 INSERT INTO LIBRO (codigo, titulo, editorial, genero, fecha_publicacion) VALUES
 (1, 'Cien Años de Soledad', 'Sudamericana', 'comedia', '1967-05-30'),
@@ -360,12 +408,6 @@ INSERT INTO LIBRO (codigo, titulo, editorial, genero, fecha_publicacion) VALUES
 (99, 'El Asco', 'Tusquets', 'tragedia', '1997-01-01'),
 (100, 'El Insomnio de Bolívar', 'Alfaguara', 'aventura', '2009-01-01');
 
-CREATE TABLE AUTORIA(
-    ced_autor VARCHAR(10) NOT NULL REFERENCES AUTOR,
-    cod_libro NUMBER(4) NOT NULL REFERENCES LIBRO,
-    porcentaje_aporte NUMBER(3) NOT NULL,
-    PRIMARY KEY(ced_autor, cod_libro)
-);
 
 INSERT INTO AUTORIA (ced_autor, cod_libro, porcentaje_aporte) VALUES
 ('1000000001', 1, 60),
@@ -423,187 +465,120 @@ INSERT INTO AUTORIA (ced_autor, cod_libro, porcentaje_aporte) VALUES
 ('1000000003', 49, 100),
 ('1000000004', 50, 100);
 
-CREATE TABLE RECURSO_DIGITAL(
-    cod_biblioteca NUMBER(4) NOT NULL REFERENCES DIGITAL,
-    cod_libro NUMBER(4) NOT NULL REFERENCES LIBRO,
-    url VARCHAR(100) PRIMARY KEY,
-    tamaño NUMBER(4) NOT NULL, /*Tamaño en MB*/
-    capacidad NUMBER(4) NOT NULL /*Capacidad maxima de visitas simultaneas*/
-);
-
-CREATE TABLE FORMATO_FISICO(
-    num_estanteria NUMBER(3) REFERENCES ESTANTERIA,
-    /*cod_biblioteca NUMBER(4) REFERENCES ESTANTERIA,*/
-    cod_libro NUMBER(4) NOT NULL REFERENCES LIBRO,
-    num_serial NUMBER(8),
-    numero_paginas NUMBER(4) NOT NULL,
-    stock NUMBER(3) NOT NULL,
-    PRIMARY KEY(num_serial,cod_libro)
-);
-
--- Inserciones para RECURSO_DIGITAL
-INSERT INTO RECURSO_DIGITAL (cod_biblioteca, cod_libro, url, tamaño, capacidad) VALUES
-(20, 1, 'https://bibliotecatomascarrasquilla.com.co/libros/1', 5, 100),
-(20, 2, 'https://bibliotecatomascarrasquilla.com.co/libros/2', 4, 80),
-(20, 3, 'https://bibliotecatomascarrasquilla.com.co/libros/3', 6, 120),
-(40, 4, 'https://bibliotecamigueldecervantes.com.co/libros/4', 3, 90),
-(40, 5, 'https://bibliotecamigueldecervantes.com.co/libros/5', 5, 110),
-(40, 6, 'https://bibliotecamigueldecervantes.com.co/libros/6', 4, 100),
-(70, 7, 'https://bibliotecagabrielgarciamarquez.com.co/libros/7', 2, 70),
-(70, 8, 'https://bibliotecagabrielgarciamarquez.com.co/libros/8', 3, 80),
-(70, 9, 'https://bibliotecagabrielgarciamarquez.com.co/libros/9', 4, 90),
-(80, 10, 'https://bibliotecanacional.gov.co/libros/10', 5, 150),
-(80, 11, 'https://bibliotecanacional.gov.co/libros/11', 4, 140),
-(80, 12, 'https://bibliotecanacional.gov.co/libros/12', 3, 130),
-(20, 13, 'https://bibliotecatomascarrasquilla.com.co/libros/13', 2, 75),
-(40, 14, 'https://bibliotecamigueldecervantes.com.co/libros/14', 6, 200),
-(70, 15, 'https://bibliotecagabrielgarciamarquez.com.co/libros/15', 3, 85),
-(20, 33, 'https://bibliotecatomascarrasquilla.com.co/libros/33', 4, 100),
-(20, 34, 'https://bibliotecatomascarrasquilla.com.co/libros/34', 3, 90),
-(20, 35, 'https://bibliotecatomascarrasquilla.com.co/libros/35', 5, 110),
-(40, 36, 'https://bibliotecamigueldecervantes.com.co/libros/36', 4, 95),
-(40, 37, 'https://bibliotecamigueldecervantes.com.co/libros/37', 3, 85),
-(40, 38, 'https://bibliotecamigueldecervantes.com.co/libros/38', 5, 105),
-(70, 39, 'https://bibliotecagabrielgarciamarquez.com.co/libros/39', 4, 100),
-(70, 40, 'https://bibliotecagabrielgarciamarquez.com.co/libros/40', 3, 90),
-(70, 41, 'https://bibliotecagabrielgarciamarquez.com.co/libros/41', 5, 110),
-(80, 42, 'https://bibliotecanacional.gov.co/libros/42', 4, 100),
-(80, 43, 'https://bibliotecanacional.gov.co/libros/43', 3, 90),
-(80, 44, 'https://bibliotecanacional.gov.co/libros/44', 5, 110);
-
--- Inserciones para FORMATO_FISICO
-INSERT INTO FORMATO_FISICO (num_estanteria, cod_libro, num_serial, numero_paginas, stock) VALUES
-(1, 1, 10000001, 432, 5),
-(2, 2, 10000002, 368, 3),
-(3, 3, 10000003, 256, 4),
-(4, 4, 10000004, 576, 2),
-(5, 5, 10000005, 224, 6),
-(6, 6, 10000006, 320, 4),
-(1, 7, 10000007, 64, 8),
-(2, 8, 10000008, 192, 3),
-(3, 9, 10000009, 256, 5),
-(4, 10, 10000010, 688, 2),
-(5, 11, 10000011, 128, 7),
-(6, 12, 10000012, 96, 4),
-(1, 13, 10000013, 80, 6),
-(2, 14, 10000014, 863, 3),
-(3, 15, 10000015, 112, 5),
-(4, 16, 10000016, 160, 4),
-(5, 17, 10000017, 304, 3),
-(6, 18, 10000018, 496, 2),
-(1, 19, 10000019, 336, 5),
-(2, 20, 10000020, 944, 1),
-(1, 45, 10000045, 280, 3),
-(2, 46, 10000046, 320, 4),
-(3, 47, 10000047, 350, 2),
-(4, 48, 10000048, 200, 5),
-(5, 49, 10000049, 240, 3),
-(6, 50, 10000050, 300, 4),
-(1, 51, 10000051, 260, 3),
-(2, 52, 10000052, 290, 4),
-(3, 53, 10000053, 310, 2),
-(4, 54, 10000054, 180, 5),
-(5, 55, 10000055, 220, 3),
-(6, 56, 10000056, 270, 4);
 
 -- Libros solo en formato digital
-INSERT INTO RECURSO_DIGITAL (cod_biblioteca, cod_libro, url, tamaño, capacidad) VALUES
-(80, 21, 'https://bibliotecanacional.gov.co/libros/21', 3, 100),
-(80, 22, 'https://bibliotecanacional.gov.co/libros/22', 2, 80),
-(80, 60, 'https://bibliotecanacional.gov.co/libros/60', 4, 100),
-(20, 61, 'https://bibliotecatomascarrasquilla.com.co/libros/61', 3, 90),
-(40, 62, 'https://bibliotecamigueldecervantes.com.co/libros/62', 5, 110),
-(70, 63, 'https://bibliotecagabrielgarciamarquez.com.co/libros/63', 4, 100),
-(80, 23, 'https://bibliotecanacional.gov.co/libros/23', 4, 120);
+INSERT INTO recurso_digital (cod_biblioteca, cod_libro, url, tamaño, capacidad) VALUES
+(20, 1, 'http://bibliotecatomascarrasquilla.com.co/libro1', 50, 100),
+(20, 2, 'http://bibliotecatomascarrasquilla.com.co/libro2', 60, 150),
+(20, 3, 'http://bibliotecatomascarrasquilla.com.co/libro3', 70, 200),
+(20, 4, 'http://bibliotecatomascarrasquilla.com.co/libro4', 80, 250),
+(20, 5, 'http://bibliotecatomascarrasquilla.com.co/libro5', 90, 300);
 
 -- Libros solo en formato físico
-INSERT INTO FORMATO_FISICO (num_estanteria, cod_libro, num_serial, numero_paginas, stock) VALUES
-(3, 24, 10000024, 208, 4),
-(4, 25, 10000025, 176, 3),
-(5, 26, 10000026, 192, 5),
-(NULL, 83, 10000083, 270, 4),
-(NULL, 84, 10000084, 310, 3),
-(NULL, 85, 10000085, 250, 5),
-(NULL, 86, 10000086, 280, 4),
-(NULL, 87, 10000087, 300, 3),
-(NULL, 88, 10000088, 320, 2);
+INSERT INTO formato_fisico (num_estanteria, cod_biblioteca, cod_libro, num_serial, numero_paginas, stock) VALUES
+(1, 10, 6, 10000001, 300, 10),
+(2, 10, 7, 10000002, 350, 15),
+(3, 10, 8, 10000003, 400, 20),
+(4, 10, 9, 10000004, 450, 25),
+(5, 10, 10, 10000005, 500, 30);
 
--- Libros en ambos formatos
-INSERT INTO RECURSO_DIGITAL (cod_biblioteca, cod_libro, url, tamaño, capacidad) VALUES
-(20, 27, 'https://bibliotecatomascarrasquilla.com.co/libros/27', 5, 150),
-(40, 28, 'https://bibliotecamigueldecervantes.com.co/libros/28', 3, 100),
-(70, 29, 'https://bibliotecagabrielgarciamarquez.com.co/libros/29', 4, 120),
-(20, 57, 'https://bibliotecatomascarrasquilla.com.co/libros/57', 4, 100),
-(40, 58, 'https://bibliotecamigueldecervantes.com.co/libros/58', 3, 90),
-(70, 59, 'https://bibliotecagabrielgarciamarquez.com.co/libros/59', 5, 110),
-(80, 64, 'https://bibliotecanacional.gov.co/libros/64', 3, 90),
-(20, 65, 'https://bibliotecatomascarrasquilla.com.co/libros/65', 5, 110),
-(40, 66, 'https://bibliotecamigueldecervantes.com.co/libros/66', 4, 100),
-(70, 67, 'https://bibliotecagabrielgarciamarquez.com.co/libros/67', 3, 90),
-(80, 68, 'https://bibliotecanacional.gov.co/libros/68', 5, 110);
+INSERT INTO recurso_digital (cod_biblioteca, cod_libro, url, tamaño, capacidad) VALUES
+(20, 11, 'http://bibliotecatomascarrasquilla.com.co/libro11', 100, 350),
+(20, 12, 'http://bibliotecatomascarrasquilla.com.co/libro12', 110, 400),
+(20, 13, 'http://bibliotecatomascarrasquilla.com.co/libro13', 120, 450),
+(20, 14, 'http://bibliotecatomascarrasquilla.com.co/libro14', 130, 500),
+(20, 15, 'http://bibliotecatomascarrasquilla.com.co/libro15', 140, 550);
+
+-- Formato físico
+INSERT INTO formato_fisico (num_estanteria, cod_biblioteca, cod_libro, num_serial, numero_paginas, stock) VALUES
+(4, 10, 11, 10000011, 550, 35),
+(5, 10, 12, 10000012, 600, 40),
+(1, 10, 13, 10000013, 650, 45),
+(2, 10, 14, 10000014, 700, 50),
+(8, 10, 15, 10000015, 750, 55);
 
 -- Libros sin estantería asignada
-INSERT INTO FORMATO_FISICO (num_estanteria, cod_libro, num_serial, numero_paginas, stock) VALUES
-(6, 27, 10000027, 368, 3),
-(1, 28, 10000028, 160, 4),
-(2, 29, 10000029, 96, 5),
-(NULL, 30, 10000030, 240, 2),
-(NULL, 31, 10000031, 512, 1),
-(NULL, 32, 10000032, 144, 3),
-(1, 69, 10000069, 230, 3),
-(2, 70, 10000070, 270, 4),
-(3, 71, 10000071, 310, 2),
-(4, 72, 10000072, 190, 5),
-(5, 73, 10000073, 220, 3),
-(6, 74, 10000074, 250, 4),
-(1, 75, 10000075, 280, 3),
-(2, 76, 10000076, 300, 4),
-(3, 77, 10000077, 320, 2),
-(4, 78, 10000078, 210, 5),
-(5, 79, 10000079, 240, 3),
-(6, 80, 10000080, 260, 4),
-(NULL, 81, 10000081, 290, 3),
-(NULL, 82, 10000082, 330, 2),
-(NULL, 89, 10000089, 230, 4),
-(NULL, 90, 10000090, 260, 3),
-(NULL, 91, 10000091, 290, 5),
-(NULL, 92, 10000092, 310, 4),
-(NULL, 93, 10000093, 270, 3),
-(NULL, 94, 10000094, 300, 2),
-(NULL, 95, 10000095, 330, 4),
-(NULL, 96, 10000096, 240, 3),
-(NULL, 97, 10000097, 280, 5),
-(NULL, 98, 10000098, 320, 4),
-(NULL, 99, 10000099, 260, 3),
-(NULL, 100, 10000100, 290, 2);
+INSERT INTO formato_fisico (num_estanteria, cod_biblioteca, cod_libro, num_serial, numero_paginas, stock) VALUES
+(NULL, 10, 16, 10000016, 800, 60),
+(NULL, 10, 17, 10000017, 850, 65),
+(NULL, 10, 18, 10000018, 900, 70),
+(NULL, 10, 19, 10000019, 950, 75),
+(NULL, 10, 20, 10000020, 1000, 80);
 
-CREATE TABLE ALQUILER(
-    ced_lector BIGNUMBER(10) NOT NULL REFERENCES LECTOR,
-    url_digital VARCHAR(100) REFERENCES RECURSO_DIGITAL,
-    serial_fisico NUMBER(10) REFERENCES FORMATO_FISICO,
-    cod_libro NUMBER(3) REFERENCES FORMATO_FISICO,
-    codigo NUMBER(5) PRIMARY KEY,
-    fecha_inicio DATE NOT NULL,
-    fecha_entrega DATE NOT NULL CHECK(fecha_entrega >= fecha_inicio),
-    precio NUMBER(6) NOT NULL
-);
-
--- Inserciones de alquileres de recursos digitales
-INSERT INTO ALQUILER(ced_lector,url_digital,cod_libro,codigo,
-                    fecha_inicio,fecha_entrega,precio) VALUES
-                    (1234567890, 'https://bibliotecatomascarrasquilla.com.co/libros/27',27,1,'2024-09-21','2024-10-06',10000),
-                    (1234567891, 'https://bibliotecatomascarrasquilla.com.co/libros/21',21,2,'2023-08-01','2023-08-16',18000),
-                    (1234567890, 'https://bibliotecatomascarrasquilla.com.co/libros/61',61,5,'2017-06-25','2017-07-10',15000),
-                    (1234567892, 'https://bibliotecatomascarrasquilla.com.co/libros/63',63,3,'2021-02-10','2021-02-25',5000),
-                    (1234567894, 'https://bibliotecatomascarrasquilla.com.co/libros/23',23,6,'2011-03-10','2011-03-25',25000),
-                    (1234567894, 'https://bibliotecatomascarrasquilla.com.co/libros/60',60,4,'2015-05-12','2015-05-27',12000);
-
--- Inserciones de alquileres de formatos fisicos
-INSERT INTO ALQUILER(ced_lector,serial_fisico,cod_libro,codigo,
-                    fecha_inicio,fecha_entrega,precio) VALUES
-                    (1234567893, 10000087,87,7,'2022-09-21','2022-10-06',11000),
-                    (1234567891, 10000086,86,9,'2024-07-03','2024-07-18',20000),
-                    (1234567893, 10000083,83,10,'2014-06-25','2014-07-10',13000),
-                    (1234567892, 10000084,84,8,'2022-02-11','2022-02-26',4500),
-                    (1234567894, 10000086,86,11,'2020-01-10','2020-01-25',21000),
-                    (1234567894, 10000088,88,12,'2019-04-12','2019-04-27',9000);
+INSERT INTO ALQUILER (ced_lector_solicita, ced_lector_devuelve, url_digital, serial_fisico, cod_libro, codigo, fecha_inicio, fecha_entrega, precio) VALUES
+(1234567890, 1234567891, NULL, 10000001, 6, 1, '2023-01-01', '2023-01-15', 5000),
+(1234567891, NULL, 'http://bibliotecatomascarrasquilla.com.co/libro1', NULL, NULL, 2, '2023-01-02', '2023-01-16', 3000),
+(1234567892, 1234567893, NULL, 10000002, 7, 3, '2023-01-03', '2023-01-17', 5500),
+(1234567893, NULL, 'http://bibliotecatomascarrasquilla.com.co/libro2', NULL, NULL, 4, '2023-01-04', '2023-01-18', 3500),
+(1234567894, 1234567890, NULL, 10000003, 8, 5, '2023-01-05', '2023-01-19', 6000),
+(23456, NULL, 'http://bibliotecatomascarrasquilla.com.co/libro3', NULL, NULL, 6, '2023-01-06', '2023-01-20', 4000),
+(24567, 25678, NULL, 10000004, 9, 7, '2023-01-07', '2023-01-21', 6500),
+(25678, NULL, 'http://bibliotecatomascarrasquilla.com.co/libro4', NULL, NULL, 8, '2023-01-08', '2023-01-22', 4500),
+(26789, 27891, NULL, 10000005, 10, 9, '2023-01-09', '2023-01-23', 7000),
+(27891, NULL, 'http://bibliotecatomascarrasquilla.com.co/libro5', NULL, NULL, 10, '2023-01-10', '2023-01-24', 5000),
+(3234567890, 3234567891, NULL, 10000011, 11, 11, '2023-01-11', '2023-01-25', 7500),
+(3234567891, NULL, 'http://bibliotecatomascarrasquilla.com.co/libro11', NULL, NULL, 12, '2023-01-12', '2023-01-26', 5500),
+(3234567892, 3234567893, NULL, 10000012, 12, 13, '2023-01-13', '2023-01-27', 8000),
+(3234567893, NULL, 'http://bibliotecatomascarrasquilla.com.co/libro12', NULL, NULL, 14, '2023-01-14', '2023-01-28', 6000),
+(3234567894, 3234567890, NULL, 10000013, 13, 15, '2023-01-15', '2023-01-29', 8500),
+(4234567890, NULL, 'http://bibliotecatomascarrasquilla.com.co/libro13', NULL, NULL, 16, '2023-01-16', '2023-01-30', 6500),
+(4234567891, 4234567892, NULL, 10000014, 14, 17, '2023-01-17', '2023-01-31', 9000),
+(4234567892, NULL, 'http://bibliotecatomascarrasquilla.com.co/libro14', NULL, NULL, 18, '2023-01-18', '2023-02-01', 7000),
+(4234567893, 4234567894, NULL, 10000015, 15, 19, '2023-01-19', '2023-02-02', 9500),
+(4234567894, NULL, 'http://bibliotecatomascarrasquilla.com.co/libro15', NULL, NULL, 20, '2023-01-20', '2023-02-03', 7500),
+(5234567890, 5234567891, NULL, 10000016, 16, 21, '2023-01-21', '2023-02-04', 10000),
+(5234567891, NULL, 'http://bibliotecatomascarrasquilla.com.co/libro1', NULL, NULL, 22, '2023-01-22', '2023-02-05', 8000),
+(5234567892, 5234567893, NULL, 10000017, 17, 23, '2023-01-23', '2023-02-06', 10500),
+(5234567893, NULL, 'http://bibliotecatomascarrasquilla.com.co/libro2', NULL, NULL, 24, '2023-01-24', '2023-02-07', 8500),
+(5234567894, 5234567890, NULL, 10000018, 18, 25, '2023-01-25', '2023-02-08', 11000),
+(6234567890, NULL, 'http://bibliotecatomascarrasquilla.com.co/libro3', NULL, NULL, 26, '2023-01-26', '2023-02-09', 9000),
+(6234567891, 6234567892, NULL, 10000019, 19, 27, '2023-01-27', '2023-02-10', 11500),
+(6234567892, NULL, 'http://bibliotecatomascarrasquilla.com.co/libro4', NULL, NULL, 28, '2023-01-28', '2023-02-11', 9500),
+(6234567893, 6234567894, NULL, 10000020, 20, 29, '2023-01-29', '2023-02-12', 12000),
+(6234567894, NULL, 'http://bibliotecatomascarrasquilla.com.co/libro5', NULL, NULL, 30, '2023-01-30', '2023-02-13', 10000),
+(7234567890, 7234567891, NULL, 10000001, 6, 31, '2023-01-31', '2023-02-14', 12500),
+(7234567891, NULL, 'http://bibliotecatomascarrasquilla.com.co/libro11', NULL, NULL, 32, '2023-02-01', '2023-02-15', 10500),
+(7234567892, 7234567893, NULL, 10000002, 7, 33, '2023-02-02', '2023-02-16', 13000),
+(7234567893, NULL, 'http://bibliotecatomascarrasquilla.com.co/libro12', NULL, NULL, 34, '2023-02-03', '2023-02-17', 11000),
+(7234567894, 7234567890, NULL, 10000003, 8, 35, '2023-02-04', '2023-02-18', 13500),
+(8234567890, NULL, 'http://bibliotecatomascarrasquilla.com.co/libro13', NULL, NULL, 36, '2023-02-05', '2023-02-19', 11500),
+(8234567891, 8234567892, NULL, 10000004, 9, 37, '2023-02-06', '2023-02-20', 14000),
+(8234567892, NULL, 'http://bibliotecatomascarrasquilla.com.co/libro14', NULL, NULL, 38, '2023-02-07', '2023-02-21', 12000),
+(8234567893, 8234567894, NULL, 10000005, 10, 39, '2023-02-08', '2023-02-22', 14500),
+(8234567894, NULL, 'http://bibliotecatomascarrasquilla.com.co/libro15', NULL, NULL, 40, '2023-02-09', '2023-02-23', 12500),
+(1234567890, 1234567891, NULL, 10000011, 11, 41, '2023-02-10', '2023-02-24', 15000),
+(1234567891, NULL, 'http://bibliotecatomascarrasquilla.com.co/libro1', NULL, NULL, 42, '2023-02-11', '2023-02-25', 13000),
+(1234567892, 1234567893, NULL, 10000012, 12, 43, '2023-02-12', '2023-02-26', 15500),
+(1234567893, NULL, 'http://bibliotecatomascarrasquilla.com.co/libro2', NULL, NULL, 44, '2023-02-13', '2023-02-27', 13500),
+(1234567894, 1234567890, NULL, 10000013, 13, 45, '2023-02-14', '2023-02-28', 16000),
+(23456, NULL, 'http://bibliotecatomascarrasquilla.com.co/libro3', NULL, NULL, 46, '2023-02-15', '2023-03-01', 14000),
+(24567, 25678, NULL, 10000014, 14, 47, '2023-02-16', '2023-03-02', 16500),
+(25678, NULL, 'http://bibliotecatomascarrasquilla.com.co/libro4', NULL, NULL, 48, '2023-02-17', '2023-03-03', 14500),
+(26789, 27891, NULL, 10000015, 15, 49, '2023-02-18', '2023-03-04', 17000),
+(27891, NULL, 'http://bibliotecatomascarrasquilla.com.co/libro5', NULL, NULL, 50, '2023-02-19', '2023-03-05', 15000),
+(3234567890, 3234567891, NULL, 10000016, 16, 51, '2023-02-20', '2023-03-06', 17500),
+(3234567891, NULL, 'http://bibliotecatomascarrasquilla.com.co/libro11', NULL, NULL, 52, '2023-02-21', '2023-03-07', 15500),
+(3234567892, 3234567893, NULL, 10000017, 17, 53, '2023-02-22', '2023-03-08', 18000),
+(3234567893, NULL, 'http://bibliotecatomascarrasquilla.com.co/libro12', NULL, NULL, 54, '2023-02-23', '2023-03-09', 16000),
+(3234567894, 3234567890, NULL, 10000018, 18, 55, '2023-02-24', '2023-03-10', 18500),
+(4234567890, NULL, 'http://bibliotecatomascarrasquilla.com.co/libro13', NULL, NULL, 56, '2023-02-25', '2023-03-11', 16500),
+(4234567891, 4234567892, NULL, 10000019, 19, 57, '2023-02-26', '2023-03-12', 19000),
+(4234567892, NULL, 'http://bibliotecatomascarrasquilla.com.co/libro14', NULL, NULL, 58, '2023-02-27', '2023-03-13', 17000),
+(4234567893, 4234567894, NULL, 10000020, 20, 59, '2023-02-28', '2023-03-14', 19500),
+(4234567894, NULL, 'http://bibliotecatomascarrasquilla.com.co/libro15', NULL, NULL, 60, '2023-03-01', '2023-03-15', 17500),
+(5234567890, 5234567891, NULL, 10000001, 6, 61, '2023-03-02', '2023-03-16', 20000),
+(5234567891, NULL, 'http://bibliotecatomascarrasquilla.com.co/libro1', NULL, NULL, 62, '2023-03-03', '2023-03-17', 18000),
+(5234567892, 5234567893, NULL, 10000002, 7, 63, '2023-03-04', '2023-03-18', 20500),
+(5234567893, NULL, 'http://bibliotecatomascarrasquilla.com.co/libro2', NULL, NULL, 64, '2023-03-05', '2023-03-19', 18500),
+(5234567894, 5234567890, NULL, 10000003, 8, 65, '2023-03-06', '2023-03-20', 21000),
+(6234567890, NULL, 'http://bibliotecatomascarrasquilla.com.co/libro3', NULL, NULL, 66, '2023-03-07', '2023-03-21', 19000),
+(6234567891, 6234567892, NULL, 10000004, 9, 67, '2023-03-08', '2023-03-22', 21500),
+(6234567892, NULL, 'http://bibliotecatomascarrasquilla.com.co/libro4', NULL, NULL, 68, '2023-03-09', '2023-03-23', 19500),
+(6234567893, 6234567894, NULL, 10000005, 10, 69, '2023-03-10', '2023-03-24', 22000),
+(6234567894, NULL, 'http://bibliotecatomascarrasquilla.com.co/libro5', NULL, NULL, 70, '2023-03-11', '2023-03-25', 20000),
+(7234567890, 7234567891, NULL, 10000011, 11, 71, '2023-03-12', '2023-03-26', 22500),
+(7234567891, NULL, 'http://bibliotecatomascarrasquilla.com.co/libro11', NULL, NULL, 72, '2023-03-13', '2023-03-27', 20500),
+(7234567892, 7234567893, NULL, 10000012, 12, 73, '2023-03-14', '2023-03-28', 23000),
+(7234567893, NULL, 'http://bibliotecatomascarrasquilla.com.co/libro12', NULL, NULL, 74, '2023-03-15', '2023-03-29', 21000),
+(7234567894, 7234567890, NULL, 10000013, 13, 75, '2023-03-16', '2023-03-30', 23500),
+(8234567890, NULL, 'http://bibliotecatomascarrasquilla.com.co/libro13', NULL, NULL, 76, '2023-03-17', '2023-03-31', 21500);

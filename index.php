@@ -22,7 +22,7 @@
             <li><b>Materia:</b> Bases de Datos I</li>
             <li><b>Profesor:</b> Francisco Javier Moreno Arboleda</li>
             <li><b>Institución:</b> Universidad Nacional de Colombia sede Medellín</li>
-            <li><b>Semestre:</b> 2022-1</li>
+            <li><b>Semestre:</b> 2024-1</li>
         </ul>
     </div>
 
