@@ -21,7 +21,7 @@ $query = "SELECT biblioteca.codigo, biblioteca.nombre, SUM(precio) as total
         FROM biblioteca INNER JOIN lector
         ON biblioteca.codigo = lector.cod_biblioteca
             INNER JOIN alquiler
-            ON lector.cedula = ced_lector_solicita
+            ON lector.cedula = ced_lector_solicita /* Cambiar por la columna correcta (ced_lecotr_devuelve) */
         GROUP BY biblioteca.codigo
         ORDER BY total DESC
         LIMIT 3;";

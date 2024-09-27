@@ -15,7 +15,7 @@
 <body>
 <div class="container mt-5">
 
-    <h1>Trabajo final BD1 - (Título de su trabajo)</h1>
+    <h1>Trabajo final BD1 - (Bibliotecas)</h1>
 
     <div class="informacion">
         <ul>
@@ -29,16 +29,16 @@
     <div class="integrantes">
         <h2>Integrantes</h2>
         <ul>
-            <li>Integrante 1</li>
-            <li>Integrante 2</li>
-            <li>Integrante 3</li>
+            <li>Estiven Ospina Jaramillo</li>
+            <li>Jhon Jader Cordoba Magaña</li>
+            <li>José  Miguel Pulgarín Agudelo</li>
         </ul>
     </div>
 
     <div class="modelo">
-        <h2>Modelo E-R (Lo pueden eliminar o poner su modelo análogo)</h2>
+        <h2>Modelo E-R</h2>
         <p></p>
-        <img src="modelo.png">
+        <img src="modeloAnalogo.jpg" width="391" height="192">
     </div>
 
     <div class="enlaces">
